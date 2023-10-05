@@ -70,7 +70,8 @@
                               'id' => 'description',
                               'class' => 'form-control',
                               'name' => 'description',
-                              'placeholder' => '(Optional)'
+                              'placeholder' => '(Optional)',
+                              'required' => 'required'
                             );
                             echo form_textarea($facility_desc_attr);
                           ?>
@@ -346,39 +347,140 @@
 
 <!-- BEGIN Update Amenity modal -->
 <div class="modal fade" id="updateamenitymodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Amenity</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+      </div>
+      <?php echo form_open('amenity/update');?>
+      <input type="hidden" name="id" id = "id">
+      <div class="modal-body m-3">
+      <!-- Amenity Name -->
+      <label for="validationCustom01" class="form-label font-weight-bold">Amenity Name</label>
+          <?php 
+        $updateamenity_name_attr = array(
+          'rows' => '1',
+          'id' => 'name',
+          'class' => 'form-control',
+          'name' => "name",
+          'placeholder' => 'Enter Amenity Name',
+          'required' => 'required'
+          );
+            echo form_input($updateamenity_name_attr);
+          ?>
+          <!--End Amenity Name -->
+          <!--Amenity Price -->
+          <div class = "row">
+        <div class = "col-md-6 mt-3">
+      <label for="validationCustom01" class="form-label font-weight-bold mt-2">Price</label>
+      <div class = "input-group">
+      <span class = "input-group-text" id = "inputGroupPrepend">₱</span>
+          <?php 
+        $updateamenity_price_attr = array(
+          'rows' => '1',
+          'id' => 'price',
+          'class' => 'form-control',
+          'name' => "price",
+          'placeholder' => '00.00',
+          'required' => 'required',
+          'type' => 'number'
+          );
+            echo form_input($updateamenity_price_attr);
+      ?>
+      </div>
+      </div>
+      <div class="col-md-6 mt-3">
+        <label for="validationCustom05" class="from-label font-weight-bold mt-2">Quantity</label>
+        <?php
+          $updateamenity_qty_attr = array(
+            'rows' => '1',
+            'id' => 'quantity',
+            'class' => 'form-control',
+            'name' => 'quantity',
+            'placeholder' => '0',
+            'required' => 'required',
+            'type' => 'number'
+          );
+          echo form_input($updateamenity_qty_attr);
+        ?>
+      </div>
+      </div>
+        <div class="col-12- mt-3">
+          <label for="validationCustom05" class="form-label font-weight-bold mt-2"> Description </label>
+          <?php
+          // Amenity Description
+          $updateamenity_desc_attr = array(
+            'rows' => '4',
+            'id' => 'description',
+            'class' => 'form-control',
+            'name' => 'description',
+            'placeholder' => '(Optional)',
+            'required' => 'required'
+          );
+          echo form_textarea($updateamenity_desc_attr);
+        ?>
+      </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <?php 
+          // Add Amenity Button
+          $update_amenity_attr = array(
+            'class' => "btn btn-primary" ,
+            'value' => "Update Amenity",
+            'type' => "submit",
+            'content' => "Update Amenity"
+          );
+          echo form_button($update_amenity_attr);
+        ?>
+          </div>
+        <?php echo form_close(); ?>
+    </div>
+  </div>
+</div>
+	<!-- END Update Amenity Modal -->
+
+                            <!--END AMENITY MODALS-->
+
+                            <!--START RESIDENT MODALS-->
+  <!-- BEGIN Add Resident modal -->
+<div class="modal fade" id="addresidentmodal" tabindex="-1" role="dialog" aria-hidden="true">
 										<div class="modal-dialog modal-dialog-centered" role="document">
 											<div class="modal-content">
 												<div class="modal-header">
-													<h5 class="modal-title">Update Amenity</h5>
+													<h5 class="modal-title">Add New Resident</h5>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
 												</div>
-                        <?php echo form_open('amenity/update');?>
-                        <input type="hidden" name="id" id = "id">
+                        <?php echo form_open('resident/add');?>
 												<div class="modal-body m-3">
-                        <!-- Amenity Name -->
-                        <label for="validationCustom01" class="form-label font-weight-bold">Amenity Name</label>
+                        <!-- Resident Name -->
+                        <label for="validationCustom01" class="form-label font-weight-bold">Resident Name</label>
                             <?php 
-                          $updateamenity_name_attr = array(
+                          $resident_name_attr = array(
                             'rows' => '1',
                             'id' => 'name',
                             'class' => 'form-control',
                             'name' => "name",
-                            'placeholder' => 'Enter Amenity Name',
+                            'placeholder' => 'Enter Resident Name',
                             'required' => 'required'
                             );
-                              echo form_input($updateamenity_name_attr);
+                              echo form_input($resident_name_attr);
                             ?>
-                            <!--End Amenity Name -->
-                            <!--Amenity Price -->
+                            <!--End Resident Name -->
+                            <!--Resident Price -->
                             <div class = "row">
                          <div class = "col-md-6 mt-3">
                         <label for="validationCustom01" class="form-label font-weight-bold mt-2">Price</label>
                         <div class = "input-group">
                         <span class = "input-group-text" id = "inputGroupPrepend">₱</span>
                            <?php 
-                          $updateamenity_price_attr = array(
+                          $resident_price_attr = array(
                             'rows' => '1',
                             'id' => 'price',
                             'class' => 'form-control',
@@ -387,14 +489,14 @@
                             'required' => 'required',
                             'type' => 'number'
                             );
-                              echo form_input($updateamenity_price_attr);
+                              echo form_input($resident_price_attr);
                         ?>
                         </div>
                         </div>
                         <div class="col-md-6 mt-3">
                           <label for="validationCustom05" class="from-label font-weight-bold mt-2">Quantity</label>
                           <?php
-                            $updateamenity_qty_attr = array(
+                            $resident_qty_attr = array(
                               'rows' => '1',
                               'id' => 'quantity',
                               'class' => 'form-control',
@@ -403,15 +505,15 @@
                               'required' => 'required',
                               'type' => 'number'
                             );
-                            echo form_input($updateamenity_qty_attr);
+                            echo form_input($resident_qty_attr);
                           ?>
                         </div>
                         </div>
                          <div class="col-12- mt-3">
                             <label for="validationCustom05" class="form-label font-weight-bold mt-2"> Description </label>
                             <?php
-                            // Amenity Description
-                            $updateamenity_desc_attr = array(
+                            // Resident Description
+                            $resident_desc_attr = array(
                               'rows' => '4',
                               'id' => 'description',
                               'class' => 'form-control',
@@ -419,7 +521,7 @@
                               'placeholder' => '(Optional)',
                               'required' => 'required'
                             );
-                            echo form_textarea($updateamenity_desc_attr);
+                            echo form_textarea($resident_desc_attr);
                           ?>
                         </div>
 												</div>
@@ -427,20 +529,18 @@
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                           <?php 
-                            // Add Amenity Button
-                            $update_amenity_attr = array(
-                              'class' => "btn btn-primary" ,
-                              'value' => "Update Amenity",
+                            // Add Resident Button
+                            $add_resident_attr = array(
+                              'class' => "btn btn-success" ,
+                              'value' => "Add Resident",
                               'type' => "submit",
-                              'content' => "Update Amenity"
+                              'content' => "Add Resident"
                             );
-                            echo form_button($update_amenity_attr);
+                            echo form_button($add_resident_attr);
                           ?>
                             </div>
                           <?php echo form_close(); ?>
 											</div>
 										</div>
 									</div>
-	<!-- END Update Amenity Modal -->
-
-                            <!--END AMENITY MODALS-->
+<!-- END Add Resident Modal -->

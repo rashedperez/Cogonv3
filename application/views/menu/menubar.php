@@ -20,15 +20,12 @@
 </head>
 <!--SideBar--->
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="sticky">
-<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.all.min.js"></script>	
-<script src="<?php echo base_url('assets/js/facility.js');?>"></script>
+	<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.all.min.js"></script>
 	<div class="wrapper">
-		<nav id="sidebar" class="sidebar">
-				
-		
+		<nav id="sidebar" class="sidebar">		
 			<div class="sidebar-content js-simplebar " style="background-color: #e03444;">
-				<div class=" d-flex justify-content-center mt-3">
+				<div class="d-flex justify-content-center mt-3">
 					<a href="<?php echo base_url('dashboard/index');?>"><i><img src="<?php echo base_url('assets/img/photos/logo.svg'); ?>" alt="" style="width: 100px; height: auto;"></i> </a>
 				</div>
 				<a class="sidebar-brand" href="<?php echo base_url('dashboard/index');?>">
@@ -38,56 +35,49 @@
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
 						<a href="<?php echo base_url('dashboard/index');?>" class="sidebar-link">
-              <i class="align-middle text-white" data-feather="sliders"></i> <span class="align-middle text-white">Dashboard</span>
-            </a>
+							<i class="align-middle text-white" data-feather="sliders"></i> <span class="align-middle text-white">Dashboard</span>
+						</a>
 					</li>
-				<!--Facility SideBar-->
+					<!-- Resources SideBar -->
 					<li class="sidebar-item">
-						<a href="<?php echo base_url('Facility/facility_index');?>"  class="sidebar-link collapsed text-white">
-              <i class="align-middle text-white" data-feather="layout"></i> <span class="align-middle text-white">Facility</span>
-            </a>
+						<a href="<?php echo base_url('resource/resource_index');?>"  class="sidebar-link collapsed text-white">
+							<i class="align-middle text-white" data-feather="layout"></i> <span class="align-middle text-white">Resources</span>
+						</a>
 					</li>
-				<!--Amenity SideBar-->
+					<!--Resident SideBar-->
 					<li class="sidebar-item">
-						<a href="<?php echo base_url('Amenity/amenity_index');?>" class="sidebar-link collapsed text-white">
-              <i class="align-middle text-white" data-feather="book-open"></i> <span class="align-middle">Amenity</span>
-            </a>
-					</li>
-				<!--Resident SideBar-->
 						<a href="<?php echo base_url('resident/resident_index');?>" class="sidebar-link collapsed text-white">
-              	<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Residents</span>
-            	</a>
-				<!--Reservation SideBar-->
-				<li class="sidebar-item">
-						<a href="#reservation" data-toggle="collapse" class="sidebar-link collapsed text-white">
-              <i class="align-middle text-white" data-feather="calendar"></i> <span class="align-middle text-white">Reservation</span>
-            </a>
-						<ul id="reservation" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Add Reservation</a></li>
-							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Reservation List</a></li>
-						</ul>
+							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Residents</span>
+						</a>
 					</li>
-				
+					<!--Reservation SideBar-->
+					<li class="sidebar-item">
+						<a href="#reservation" data-toggle="collapse" class="sidebar-link collapsed text-white">
+							<i class="align-middle text-white" data-feather="calendar"></i> <span class="align-middle text-white">Reservation</span>
+						</a>
+						<ul id="reservation" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+									<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Add Reservation</a></li>
+									<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Reservation List</a></li>
+								</ul>
+							</li>
 						</ul>
 					</li>
 				</ul>
-			</li>
-		</ul>
-	</div>
-</nav>
+			</div>
+		</nav>
 		<div class="main">
 			<nav class="navbar navbar-expand navbar-light navbar-bg">
 				<a class="sidebar-toggle">
-          <i class="hamburger align-self-center"></i>
-        </a>
+					<i class="hamburger align-self-center"></i>
+				</a>
 
 				<form class="d-none d-sm-inline-block">
 					<div class="input-group input-group-navbar">
 						<input type="text" class="form-control" placeholder="Search..." aria-label="Search">
 						<div class="input-group-append">
 							<button class="btn" type="button">
-                <i class="align-middle" data-feather="search"></i>
-              </button>
+								<i class="align-middle" data-feather="search"></i>
+							</button>
 						</div>
 					</div>
 				</form>
@@ -96,11 +86,11 @@
 					<ul class="navbar-nav navbar-align">
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-toggle="dropdown">
-                <i class="align-middle" data-feather="settings"></i>
-              </a>
+								<i class="align-middle" data-feather="settings"></i>
+							</a>
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
-                			<span style="color: #495057"><i class="mr-1" data-feather="user" style="color: #495057"></i>Rashed Perez</span>
-              </a>
+								<span style="color: #495057"><i class="mr-1" data-feather="user" style="color: #495057"></i>Rashed Perez</span>
+							</a>
 							<div class="dropdown-menu dropdown-menu-right">
 								<a class="dropdown-item" href="#"><i class="mr-3" data-feather="help-circle" style="color: #495057"></i>Help</a>
 								<a class="dropdown-item" href="#"><i class="mr-3" data-feather="log-out" style="color: #495057"></i>Sign out</a>
@@ -110,5 +100,3 @@
 				</div>
 			</nav>
 	<script src="<?php echo base_url('assets/js/app.js');?>"></script>
-</body>
-</html>
