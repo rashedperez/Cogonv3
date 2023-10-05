@@ -33,16 +33,9 @@
         public function update_facility($id ,$data)
         {
             $this->db->where('id', $id);
-<<<<<<< HEAD
-            $query = $this->db->update('facility', $data);
-            return $query;
-        }
-=======
             $result = $this->db->update('resource', $data);
 
             return $result;
         }
-
->>>>>>> 645322d (Finished Resource and Add Reservation Feature)
     }
 ?>
