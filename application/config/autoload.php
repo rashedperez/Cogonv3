@@ -58,7 +58,11 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
+<<<<<<< HEAD
 $autoload['libraries'] = array('session','database');
+=======
+$autoload['libraries'] = array('session','database', 'form_validation');
+>>>>>>> 645322d (Finished Resource and Add Reservation Feature)
 
 /*
 | -------------------------------------------------------------------
@@ -132,4 +136,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('facility_model', 'amenity_model','resident_model');
+$autoload['model'] = array('facility_model', 'amenity_model','resident_model', 'resource_model', 'reservation_model');
