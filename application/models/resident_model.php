@@ -31,5 +31,14 @@
             $query = $this->db->update('resident', $data);
             return $query;
         }
+
+        // get resident by id
+        public function get_resident_by_id($id)
+        {
+            $this->db->where('id', $id);
+            $query = $this->db->get('resident', 1);
+            
+            return $query->row();
+        }
     }
 ?>
