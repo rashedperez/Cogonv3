@@ -37,7 +37,7 @@
         }
 
         // get resource by id
-        public function get_resource_by_d($id)
+        public function get_resource_by_id($id)
         {
             $this->db->where('id', $id);
             $query = $this->db->get('resource', 1);
