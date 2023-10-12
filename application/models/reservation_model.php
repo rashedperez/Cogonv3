@@ -25,5 +25,41 @@
 
             return $result;
         }
+
+        // delete reservation
+        public function delete_reservation($id)
+        {
+            $this->db->where('id', $id);
+            $result = $this->db->delete('reservation');
+
+            return $result;
+        }
+
+        // get latest reservation
+        public function get_latest_reservation()
+        {
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('reservation', 1);
+
+            return $query->row();
+        }
+
+        // get all reservations
+        public function get_reservations()
+        {
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('reservation');
+
+            return $query->result();
+        }
+
+        // get reservation details
+        public function get_reservation_details($reservation_id)
+        {
+            $this->db->where('reservation_id', $reservation_id);
+            $query = $this->db->get('reservation_details');
+
+            return $query->result();
+        }
     }
 ?>

@@ -35,6 +35,15 @@
 
             return $result;
         }
+
+        // get resource by id
+        public function get_resource_by_d($id)
+        {
+            $this->db->where('id', $id);
+            $query = $this->db->get('resource', 1);
+
+            return $query->row();
+        }
         
     }
 ?>
