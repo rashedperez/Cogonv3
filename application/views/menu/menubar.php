@@ -16,6 +16,17 @@
 	
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css" rel="stylesheet">
 
+	<!-- Custom CSS -->
+	<style>
+		.text-ellipsis {
+			display: inline-block;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			max-width: 100%;
+		}
+	</style>
+
 	<!-- END SETTINGS -->	
 </head>
 <!--SideBar--->
@@ -56,10 +67,8 @@
 							<i class="align-middle text-white" data-feather="calendar"></i> <span class="align-middle text-white">Reservation</span>
 						</a>
 						<ul id="reservation" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-									<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Add Reservation</a></li>
-									<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Reservation List</a></li>
-								</ul>
-							</li>
+							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Add Reservation</a></li>
+							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/list');?>">Reservation List</a></li>
 						</ul>
 					</li>
 				</ul>

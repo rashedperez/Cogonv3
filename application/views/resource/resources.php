@@ -35,20 +35,19 @@
                                             <?php foreach ($resources as $resource): ?>
                                             <tr>
                                                 <td><?php echo ucfirst($resource->type); ?></td>
-                                                <td><?php echo $resource->name?></td>
-                                                <td><?php echo $resource->price?></td>
-                                                <td><?php echo $resource->quantity?></td>
+                                                <td><?php echo $resource->name;?></td>
+                                                <td><?php echo $resource->price; ?></td>
+                                                <td><?php echo $resource->quantity; ?></td>
                                                 <td class="text-center">
-                                                <!--Resource Information Button-->
-                                                <button class="btn border-0 text-info" data-toggle="modal" data-target="#resourceinfo" data-data='<?= json_encode($resource) ?>'> 
-                                                    <i data-feather="info"></i>
-                                                </button>
-                                                <button class ="btn border-0 text-primary" data-toggle="modal" data-target="#updateresourcemodal"
-                                                    data-data='<?= json_encode($resource)?>'>
-                                                    <i data-feather="edit"></i>
-                                                </button>
-                                                <a href="<?php echo base_url('resource/delete/' .$resource->id);?>" onclick="return confirm('Are you sure you want to remove this resource? This action cannot be undone.');"><button class ="btn border-0 text-danger"><i data-feather="trash"></i></button></a>
-                                                    
+                                                    <!--Resource Information Button-->
+                                                    <button class="btn border-0 text-info" data-toggle="modal" data-target="#resourceinfo" data-data='<?= json_encode($resource) ?>'> 
+                                                        <i data-feather="info"></i>
+                                                    </button>
+                                                    <button class ="btn border-0 text-primary" data-toggle="modal" data-target="#updateresourcemodal"
+                                                        data-data='<?= json_encode($resource)?>'>
+                                                        <i data-feather="edit"></i>
+                                                    </button>
+                                                    <a href="<?php echo base_url('resource/delete/' .$resource->id);?>" onclick="return confirm('Are you sure you want to remove this resource? This action cannot be undone.');"><button class ="btn border-0 text-danger"><i data-feather="trash"></i></button></a>
                                                 </td>
                                             </tr>
                                             <?php endforeach; ?>
