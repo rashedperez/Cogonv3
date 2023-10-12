@@ -26,26 +26,37 @@
                                             <!--Reservation table body -->
                                             <?php foreach ($reservations as $reservation): ?>
                                             <tr>
-                                                <td>R<?php echo str_pad($reservation->id, 7, '0', STR_PAD_LEFT); ?></td>
+                                                <?php
+                                                    // Get Facilities
+                                                    $facilities = array_filter($reservation->resources, function ($resource) {
+                                                        return $resource->data->type == RESOURCE_FACILITY;
+                                                    });
+
+                                                    // Get Amenities
+                                                    $amenities = array_filter($reservation->resources, function ($resource) {
+                                                        return $resource->data->type == RESOURCE_AMENITY;
+                                                    });
+                                                ?>
+                                                <td><?php echo $reservation->formatted_id; ?></td>
                                                 <td class="text-center"><?php echo date('F j, Y', strtotime($reservation->date_reservation)); ?></td>
                                                 <td class="text-center" style="max-width: 150px">
-                                                    <?php if (!empty($reservation->facilities)): ?>
+                                                    <?php if (!empty($facilities)): ?>
                                                         <span class="text-ellipsis">
                                                             <b>Facility:</b>
                                                             <span class="text-muted">
                                                                 <?php echo implode(', ', array_map(function ($facility) {
-                                                                    return $facility->name;
-                                                                }, $reservation->facilities)); ?>
+                                                                    return $facility->data->name;
+                                                                }, $facilities)); ?>
                                                             </span>
                                                         </span>
                                                     <?php endif ?>
-                                                    <?php if (!empty($reservation->amenities)): ?>
+                                                    <?php if (!empty($amenities)): ?>
                                                         <span class="text-ellipsis">
                                                             <b>Amenity:</b>
                                                             <span class="text-muted">
                                                                 <?php echo implode(', ', array_map(function ($amenity) {
-                                                                    return $amenity->name;
-                                                                }, $reservation->amenities)); ?>
+                                                                    return $amenity->data->name;
+                                                                }, $amenities)); ?>
                                                             </span>
                                                         </span>
                                                     <?php endif ?>
@@ -57,6 +68,9 @@
                                                     <button class="btn border-0 text-info" data-toggle="modal" data-target="#reservationinfo" data-data='<?= json_encode($reservation) ?>'> 
                                                         <i data-feather="info"></i>
                                                     </button>
+                                                    <a href="<?php echo base_url('reservation/edit/' . $reservation->id); ?>" class="btn border-0 text-primary">
+                                                        <i data-feather="edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                             <?php endforeach; ?>
@@ -70,8 +84,8 @@
             </main>
         </div>
     </div>
-	<?php include('application\views\resource\modals.php'); ?>
-	<script src="<?php echo base_url('assets/js/resource.js');?>"></script>
+	<?php include('application\views\reservation\modals.php'); ?>
+	<script src="<?php echo base_url('assets/js/reservation.js');?>"></script>
 	
 	<script>
 		// Notifications

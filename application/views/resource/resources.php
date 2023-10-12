@@ -47,7 +47,7 @@
                                                         data-data='<?= json_encode($resource)?>'>
                                                         <i data-feather="edit"></i>
                                                     </button>
-                                                    <a href="<?php echo base_url('resource/delete/' .$resource->id);?>" onclick="return confirm('Are you sure you want to remove this resource? This action cannot be undone.');"><button class ="btn border-0 text-danger"><i data-feather="trash"></i></button></a>
+                                                    <button class="btn border-0 delete text-danger" data="<?php echo $resource->id; ?>"><i data-feather="trash"></i></button>
                                                 </td>
                                             </tr>
                                             <?php endforeach; ?>
@@ -82,6 +82,35 @@
 
 		<?php endif ?>
 	</script>
+
+    <script>
+        $(document).ready(() => {
+
+            // Event Listener for delete
+            $('.delete').click(({ currentTarget }) => {
+
+                // Show confirmation
+                Swal.fire({
+                    title: 'Are you sure you want to remove this resource?',
+                    text: 'This action cannot be undone',
+                    showDenyButton: true,
+                    confirmButtonText: 'Delete',
+                    confirmButtonColor: '#E03444',
+                    denyButtonText: 'Cancel',
+                    denyButtonColor: '#495057',
+                    reverseButtons: true
+                }).then((result) => {
+                    
+                    // Confirmed
+                    if (result.isConfirmed) {
+                        
+                        // Delete
+                        window.location = 'delete/' + currentTarget.getAttribute('data');
+                    }
+                });
+            });
+        });
+    </script>
 		
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {

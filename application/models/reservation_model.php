@@ -19,7 +19,7 @@
         }
 
         // inserting data into reservation_details table in db
-        public function add_reservation_details($data)
+        public function add_reservation_detail($data)
         {
             $result = $this->db->insert('reservation_details', $data);
 
@@ -53,6 +53,15 @@
             return $query->result();
         }
 
+        // get reservation by id
+        public function get_reservation($id)
+        {
+            $this->db->where('id', $id);
+            $query = $this->db->get('reservation', 1);
+
+            return $query->row();
+        }
+
         // get reservation details
         public function get_reservation_details($reservation_id)
         {
@@ -60,6 +69,33 @@
             $query = $this->db->get('reservation_details');
 
             return $query->result();
+        }
+
+        // update reservation
+        public function update_reservation($id, $data)
+        {
+            $this->db->where('id', $id);
+            $result = $this->db->update('reservation', $data);
+
+            return $result;
+        }
+
+        // update reservation detail
+        public function update_reservation_detail($id, $data)
+        {
+            $this->db->where('id', $id);
+            $result = $this->db->update('reservation_details', $data);
+
+            return $result;
+        }
+
+        // delete reservation detail
+        public function delete_reservation_detail($id)
+        {
+            $this->db->where('id', $id);
+            $result = $this->db->delete('reservation_details');
+
+            return $result;
         }
     }
 ?>

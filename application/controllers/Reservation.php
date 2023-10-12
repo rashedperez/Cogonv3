@@ -11,35 +11,24 @@
             // Iterate reservations
             $data['reservations'] = array_map(function($reservation) {
 
+                // Formatted ID
+                $reservation->formatted_id = format_reservation_id($reservation->id);
+
                 // Get reserver
                 $reservation->reserver = $this->resident_model->get_resident_by_id($reservation->Res_id)->name;
 
                 // Get reserved resources
                 $resources_reserved = $this->reservation_model->get_reservation_details($reservation->id);
 
-                // Filter facilities
-                $reservation->facilities = array_filter(array_map(function($resource_reserved) {
-                    
-                    // Get resource
-                    $resource = $this->resource_model->get_resource_by_d($resource_reserved->resource_id);
+                // Get resources data
+                $reservation->resources = array_map(function($resource) {
 
-                    // Only return facility
-                    if ($resource->type == RESOURCE_FACILITY) {
-                        return $resource;
-                    }
-                }, $resources_reserved));
+                    // Get Data
+                    $resource->data = $this->resource_model->get_resource_by_id($resource->resource_id);
 
-                // Filter amenities
-                $reservation->amenities = array_filter(array_map(function($resource_reserved) {
-                    
-                    // Get resource
-                    $resource = $this->resource_model->get_resource_by_d($resource_reserved->resource_id);
+                    return $resource;
 
-                    // Only return amenuty
-                    if ($resource->type == RESOURCE_AMENITY) {
-                        return $resource;
-                    }
-                }, $resources_reserved));
+                }, $resources_reserved);
 
                 return $reservation;
 
@@ -66,53 +55,140 @@
         public function add() {
             
             // Get Inputs
+            $id = $this->input->post('id');
             $resident = $this->input->post('resident');
             $date_reserved = $this->input->post('date_reserved');
             $resource = $this->input->post('resource');
             $quantity = $this->input->post('quantity');
 
-            // Reservation
-            $reservation_data = array(
-                'Res_id' => $resident,
-                'date_reservation' => date('Y-m-d H:i:s'),
-                'date_reserved'=> date('Y-m-d H:i:s')
-            );
-            
-            // Add reservation attempt
-            $reservation = $this->reservation_model->add_reservation($reservation_data);
+            // Add
+            if (empty($id)) {
 
-            // Check reservation is added
-            if ($reservation !== FALSE) {
+                // Reservation
+                $reservation_data = array(
+                    'Res_id' => $resident,
+                    'date_reservation' => date('Y-m-d H:i:s'),
+                    'date_reserved'=> $date_reserved
+                );
+                
+                // Add reservation attempt
+                $reservation = $this->reservation_model->add_reservation($reservation_data);
 
-                try {
-                   
-                    // Loop all reservation facilities
-                    for ($i = 0; $i < count($resource); $i++) {
+                // Check reservation is added
+                if ($reservation !== FALSE) {
 
-                        // Add reservation details
-                        $reservation_details = array(
-                            'reservation_id' => $reservation,
-                            'resource_id' => $resource[$i],
-                            'quantity' => $quantity[$i]
-                        );
-
-                        // Add attempt
-                        $this->reservation_model->add_reservation_details($reservation_details);
-                    }
-
-                    $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Reserved Successfully']);
+                    try {
                     
-                    // Redirect to list of reservation
-                    redirect('reservation/list');
-                }
-                // There is error
-                catch (\Throwable $th) {
-                    $this->session->set_flashdata('resource_status', ['type' => 'error', 'message' => 'Failed To Reserve']);
+                        // Loop all reservation facilities
+                        for ($i = 0; $i < count($resource); $i++) {
 
-                    // Redirect to add reservation
-                    redirect('reservation/reservation_index');
+                            // Add reservation details
+                            $reservation_details = array(
+                                'reservation_id' => $reservation,
+                                'resource_id' => $resource[$i],
+                                'quantity' => $quantity[$i]
+                            );
+
+                            // Add attempt
+                            $this->reservation_model->add_reservation_detail($reservation_details);
+                        }
+
+                        $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Reserved Successfully']);
+                        
+                        // Redirect to list of reservation
+                        redirect('reservation/list');
+                    }
+                    // There is error
+                    catch (\Throwable $th) {
+                        $this->session->set_flashdata('resource_status', ['type' => 'error', 'message' => 'Failed To Reserve']);
+
+                        // Redirect to add reservation
+                        redirect('reservation/reservation_index');
+                    }
                 }
             }
+            // Update
+            else {
+
+                // Reservation
+                $reservation_data = array(
+                    'Res_id' => $resident,
+                    'date_reserved'=> $date_reserved
+                );
+
+                // Update reservation attempt
+                $reservation = $this->reservation_model->update_reservation($id, $reservation_data);
+
+                // Check reservation is added
+                if ($reservation !== FALSE) {
+
+                    try {
+
+                        // Current reservation details
+                        $current_details = $this->reservation_model->get_reservation_details($id);
+                    
+                        // Loop all reservation facilities
+                        for ($i = 0; $i < count($resource); $i++) {
+
+                            // Add reservation details
+                            $reservation_details = array(
+                                'reservation_id' => $id,
+                                'resource_id' => $resource[$i],
+                                'quantity' => $quantity[$i]
+                            );
+
+                            // Update existing if less
+                            if ($i < count($current_details)) {
+                                // Update
+                                $this->reservation_model->update_reservation_detail($current_details[$i]->id, $reservation_details);
+                            }
+                            else {
+                                // Add attempt
+                                $this->reservation_model->add_reservation_detail($reservation_details);
+                            }
+                        }
+
+                        // Delete excess
+                        if ($i < count($current_details)) {
+                            for ($i = $i; $i < count($current_details); $i++) {
+                                $this->reservation_model->delete_reservation_detail($current_details[$i]->id);
+                            }
+                        }
+
+                        $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Reservation Updated']);
+                        
+                        // Redirect to list of reservation
+                        redirect('reservation/list');
+                    }
+                    // There is error
+                    catch (\Throwable $th) {
+                        $this->session->set_flashdata('resource_status', ['type' => 'error', 'message' => 'Failed To Update Reservation']);
+
+                        // Redirect to add reservation
+                        redirect('reservation/reservation_index');
+                    }
+                }
+            }
+        }
+
+        // Edit Reservation
+        public function edit($id)
+        {
+            $data['reservation'] = $this->reservation_model->get_reservation($id);
+            $data['reservation']->resources = array_map(function ($resource) {
+
+                // Get data
+                $resource->data = $this->resource_model->get_resource_by_id($resource->resource_id);
+
+                return $resource;
+
+            }, $this->reservation_model->get_reservation_details($id));
+            $data['residents'] = $this->resident_model->get_all_resident();
+            $data['resources'] = $this->resource_model->get_all_resources();
+
+            $this->load->view('menu/menubar');
+            $this->load->view('reservation/reservation_edit', $data);
+            $this->load->view('menu/footer');
         }
     }
 ?>
