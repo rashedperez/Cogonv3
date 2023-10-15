@@ -77,6 +77,50 @@
 
             redirect('resource/resource_index');
         }
+
+        // Rented Resources
+        public function rented() {
+
+            // Iterate reservations
+            $data['reservations'] = array_map(function($reservation) {
+
+                // Formatted ID
+                $reservation->formatted_id = format_reservation_id($reservation->id);
+
+                // Get reserver
+                $reservation->reserver = $this->resident_model->get_resident_by_id($reservation->Res_id)->name;
+
+                // Get reserved resources
+                $resources_reserved = $this->reservation_model->get_reservation_details($reservation->id);
+
+                // Get resources data
+                $reservation->resources = array_map(function($resource) {
+
+                    // Get Data
+                    $resource->data = $this->resource_model->get_resource_by_id($resource->resource_id);
+
+                    return $resource;
+
+                }, $resources_reserved);
+
+                // Get total amount paid
+                $reservation->total_amount_paid = number_format(array_sum(array_map(function($resource) {
+
+                    // Get Data
+                    $resource_data = $this->resource_model->get_resource_by_id($resource->resource_id);
+
+                    return $resource_data->price * $resource->quantity;
+
+                }, $resources_reserved)), 2);
+
+                return $reservation;
+
+            }, $this->reservation_model->get_paid_reservations());
+
+            $this->load->view('menu/menubar');
+            $this->load->view('resource/rented',$data);
+            $this->load->view('menu/footer');
+        }
         
     }
 ?>

@@ -38,11 +38,11 @@
 												<td><?php echo $resident->address?></td>
 												<td><?php echo $resident->contact_num?></td>
 												<td class="text-center">
-												<button class ="btn border-0 text-primary" data-toggle="modal" data-target="#updateresidentmodal"
-												data-data='<?= json_encode($resident)?>'>
-												<i data-feather="edit"></i>
-												</button>
-												<button class="btn border-0 delete text-danger" data="<?php echo $resident->id; ?>"><i data-feather="trash"></i></button>
+													<button class ="btn border-0 text-primary" data-toggle="modal" data-target="#updateresidentmodal"
+													data-data='<?= json_encode($resident)?>'>
+													<i data-feather="edit"></i>
+													</button>
+													<button class="btn border-0 delete text-danger" data="<?php echo $resident->id; ?>"><i data-feather="trash"></i></button>
 												</td>
 											</tr>
 											<?php endforeach; ?>

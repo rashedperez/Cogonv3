@@ -53,6 +53,26 @@
             return $query->result();
         }
 
+        // get unpaid reservations
+        public function get_unpaid_reservations()
+        {
+            $this->db->where('date_paid', NULL);
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('reservation');
+
+            return $query->result();
+        }
+
+        // get paid reservations
+        public function get_paid_reservations()
+        {
+            $this->db->where('date_paid !=', NULL);
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('reservation');
+
+            return $query->result();
+        }
+
         // get reservation by id
         public function get_reservation($id)
         {

@@ -56,13 +56,13 @@
 							<i class="align-middle text-white" data-feather="layout"></i> <span class="align-middle text-white">Resources</span>
 						</a>
 					</li>
-					<!--Resident SideBar-->
+					<!-- Resident SideBar-->
 					<li class="sidebar-item">
 						<a href="<?php echo base_url('resident/resident_index');?>" class="sidebar-link collapsed text-white">
 							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Residents</span>
 						</a>
 					</li>
-					<!--Reservation SideBar-->
+					<!-- Reservation SideBar-->
 					<li class="sidebar-item">
 						<a href="#reservation" data-toggle="collapse" class="sidebar-link collapsed text-white">
 							<i class="align-middle text-white" data-feather="calendar"></i> <span class="align-middle text-white">Reservation</span>
@@ -71,6 +71,12 @@
 							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Add Reservation</a></li>
 							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/list');?>">Reservation List</a></li>
 						</ul>
+					</li>
+					<!-- Rented Resources SideBar-->
+					<li class="sidebar-item">
+						<a href="<?php echo base_url('resource/rented');?>" class="sidebar-link collapsed text-white">
+							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Rented Resources</span>
+						</a>
 					</li>
 				</ul>
 			</div>
