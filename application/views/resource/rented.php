@@ -1,14 +1,13 @@
 <!-- <body> -->
     <!-- <div class="wrapper"> -->
         <!-- <div class="main"> -->
-            <main class="content">
+        <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header d-md-flex justify-content-between">
-                                    <h1 class="h3 mt-2">Reservation</h1>
-                                    <a href="<?php echo base_url('reservation/reservation_index'); ?>" class="btn btn-success p-2">Add Reservation</a>
+                                <div class="card-header">
+                                    <h1 class="h3 mt-2">Rented Resources</h1>
                                 </div>
                                 <div class="card-body">
                                     <table id="datatables-buttons" class="table table-striped" style="width:100%">
@@ -19,7 +18,7 @@
                                                 <th class="text-center">Reserved Resources</th>
                                                 <th class="text-center">Reserver</th>
                                                 <th class="text-center">Date Reserved</th>
-                                                <th class="text-center" style="width: 150px !important;">Action</th>
+                                                <th class="text-center">Total Amount Paid</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -63,20 +62,7 @@
                                                 </td>
                                                 <td class="text-center"><?php echo $reservation->reserver; ?></td>
                                                 <td class="text-center"><?php echo date('F j, Y - g:i A', strtotime($reservation->date_reserved)); ?></td>
-                                                <td class="text-center">
-                                                    <!--Reservation Information Button-->
-                                                    <button class="btn border-0 text-info" data-toggle="modal" data-target="#reservationinfo" data-data='<?= json_encode($reservation) ?>'> 
-                                                        <i data-feather="info"></i>
-                                                    </button>
-                                                    <a href="<?php echo base_url('reservation/edit/' . $reservation->id); ?>" class="btn border-0 text-primary">
-                                                        <i data-feather="edit"></i>
-                                                    </a>
-                                                    <?php if ($reservation->date_paid): ?>
-                                                        <button class="btn btn-outline-success" data-bs-toggle="tooltip" data-bs-title="This reservation was paid on <?php echo date('F j, Y \a\t g:i A', strtotime($reservation->date_paid)); ?>.">Paid</button>
-                                                    <?php else: ?>
-                                                    <button class="btn btn-outline-warning" data-toggle="modal" data-target="#reservation-payment" data-data='<?= json_encode($reservation) ?>'>Confirm Reservation</button>
-                                                    <?php endif ?>
-                                                </td>
+                                                <td class="text-center">₱<?php echo $reservation->total_amount_paid; ?> </td>
                                             </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -94,65 +80,22 @@
 	
 	<script>
 		// Notifications
-		<?php if ($this->session->flashdata('reservation_status')): ?>
-			<?php $notification = $this->session->flashdata('reservation_status'); ?>
+		<?php if ($this->session->flashdata('resource_status')): ?>
+			<?php $notification = $this->session->flashdata('resource_status'); ?>
 
 			// Prompt Notification
-			Swal.mixin({
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				timer: 3000,
-			}).fire({
-				icon: '<?php echo $notification['type']; ?>',
-				title: '<?php echo $notification['message']; ?>'
-			});
+            window.notyf.open({
+                type: '<?php echo $notification['type']; ?>',
+                message: '<?php echo $notification['message']; ?>',
+                duration: 3000,
+                position: {
+                    x: 'right',
+                    y: 'top'
+                }
+            });
 
 		<?php endif ?>
 	</script>
-
-    <script>
-        $(document).ready(() => {
-
-            // Event Listener for Pay Clicked
-            $('.btn-pay').click(({ currentTarget }) => {
-
-                // Show confirmation
-                Swal.fire({
-                    title: 'Confirm Payment',
-                    text: 'This reservation will be marked as paid',
-                    showDenyButton: true,
-                    confirmButtonText: 'Confirm',
-                    confirmButtonColor: '#4bbf73',
-                    denyButtonText: 'Cancel',
-                    denyButtonColor: '#495057',
-                    reverseButtons: true
-                }).then((result) => {
-                    
-                    // Confirmed
-                    if (result.isConfirmed) {
-                        
-                        // Submit form
-                        $(currentTarget).closest('form').trigger('submit');
-                    }
-                    else {
-                        Swal.mixin({
-                            toast: true,
-                            position: 'center',
-                            showConfirmButton: false,
-                            timer: 1000,
-                        }).fire({
-                            icon: 'error',
-                            text: 'Payment cancelled'
-                        });
-
-                        // Close modal
-                        $('.modal').modal('hide');
-                    }
-                });
-            });
-        });
-    </script>
 		
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
@@ -163,10 +106,6 @@
 				buttons: ["copy", "print"]
 			});
 			datatablesButtons.buttons().container().appendTo("#datatables-buttons_wrapper .col-md-6:eq(0)");
-
-            // Set Bootstrap Tooltip Instance
-            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 		});
 	</script>
 </body>

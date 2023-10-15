@@ -93,14 +93,14 @@
                             $this->reservation_model->add_reservation_detail($reservation_details);
                         }
 
-                        $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Reserved Successfully']);
+                        $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'Reserved Successfully']);
                         
                         // Redirect to list of reservation
                         redirect('reservation/list');
                     }
                     // There is error
                     catch (\Throwable $th) {
-                        $this->session->set_flashdata('resource_status', ['type' => 'error', 'message' => 'Failed To Reserve']);
+                        $this->session->set_flashdata('reservation_status', ['type' => 'error', 'message' => 'Failed To Reserve']);
 
                         // Redirect to add reservation
                         redirect('reservation/reservation_index');
@@ -155,14 +155,14 @@
                             }
                         }
 
-                        $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Reservation Updated']);
+                        $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'Reservation Updated']);
                         
                         // Redirect to list of reservation
                         redirect('reservation/list');
                     }
                     // There is error
                     catch (\Throwable $th) {
-                        $this->session->set_flashdata('resource_status', ['type' => 'error', 'message' => 'Failed To Update Reservation']);
+                        $this->session->set_flashdata('reservation_status', ['type' => 'error', 'message' => 'Failed To Update Reservation']);
 
                         // Redirect to add reservation
                         redirect('reservation/reservation_index');
@@ -189,6 +189,27 @@
             $this->load->view('menu/menubar');
             $this->load->view('reservation/reservation_edit', $data);
             $this->load->view('menu/footer');
+        }
+        
+        // Pay Reservation
+        public function pay($id) {
+
+            // Pay attempt
+            $pay_result = $this->reservation_model->update_reservation($id, array('date_paid' => date('Y-m-d H:i:s')));
+
+            // Check if payment recorded
+            if ($pay_result) {
+
+                // Show error message
+                $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'The confirmed booking will be appear in the Rented Resources List']);
+
+                redirect('reservation/list');
+            }
+
+            // Show error message
+            $this->session->set_flashdata('reservation_status', ['type' => 'error', 'message' => 'Failed To Pay Reservation']);
+
+            redirect('reservation/list');
         }
     }
 ?>

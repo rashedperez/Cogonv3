@@ -56,13 +56,13 @@
 							<i class="align-middle text-white" data-feather="layout"></i> <span class="align-middle text-white">Resources</span>
 						</a>
 					</li>
-					<!--Resident SideBar-->
+					<!-- Resident SideBar-->
 					<li class="sidebar-item">
 						<a href="<?php echo base_url('resident/resident_index');?>" class="sidebar-link collapsed text-white">
 							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Residents</span>
 						</a>
 					</li>
-					<!--Reservation SideBar-->
+					<!-- Reservation SideBar-->
 					<li class="sidebar-item">
 						<a href="#reservation" data-toggle="collapse" class="sidebar-link collapsed text-white">
 							<i class="align-middle text-white" data-feather="calendar"></i> <span class="align-middle text-white">Reservation</span>
@@ -71,6 +71,12 @@
 							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/reservation_index');?>">Add Reservation</a></li>
 							<li class="sidebar-item"><a class="sidebar-link text-white" href="<?php echo base_url('reservation/list');?>">Reservation List</a></li>
 						</ul>
+					</li>
+					<!-- Rented Resources SideBar-->
+					<li class="sidebar-item">
+						<a href="<?php echo base_url('resource/rented');?>" class="sidebar-link collapsed text-white">
+							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Rented Resources</span>
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -110,3 +116,5 @@
 				</div>
 			</nav>
 	<script src="<?php echo base_url('assets/js/app.js');?>"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
