@@ -1,7 +1,7 @@
 <!-- <body> -->
     <!-- <div class="wrapper"> -->
         <!-- <div class="main"> -->
-        <main class="content">
+            <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12">
@@ -73,6 +73,7 @@
                     </div>
                 </div>
             </main>
+            <?php include('application\views\menu\footer.php'); ?>
         </div>
     </div>
 	<?php include('application\views\reservation\modals.php'); ?>
@@ -98,15 +99,16 @@
 	</script>
 		
 	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			// Datatables with Buttons
-			var datatablesButtons = $("#datatables-buttons").DataTable({
+		$(document).ready(() => {
+            
+            // Set DataTable Instance
+            $('table').DataTable({
+                dom: 'Bfrtip',
 				responsive: true,
 				lengthChange: !1,
-				buttons: ["copy", "print"]
+                buttons: ['copy', 'print']
 			});
-			datatablesButtons.buttons().container().appendTo("#datatables-buttons_wrapper .col-md-6:eq(0)");
-		});
+        });
 	</script>
 </body>
 </html>

@@ -7,16 +7,16 @@
                         <div class="card-header d-flex justify-content-between">
                             <div>
                                 <h5 class="card-title">Add Reservation</h5>
-                                <b>Reservation ID<span class="ml-3"><?php echo format_reservation_id($latest_reservation->id); ?></span></b>
+                                <b>Reservation ID<span class="ml-3"><?php echo format_reservation_id($latest_reservation ? $latest_reservation->id : 1); ?></span></b>
                             </div>
                             <b>Date of Reservation: <span class="ml-2"><?php echo date('F j, Y'); ?></span></b>
                         </div>
                         <div class="card-body">
                             <?php echo form_open('reservation/add'); ?>
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 d-flex flex-column">
                                         <label for="inputresident">Resident</label>
-                                        <select id="inputresident" class="form-control" name="resident">
+                                        <select id="inputresident" class="form-control sumoselect" name="resident">
                                             <option selected disabled>Choose...</option>
                                             <?php foreach ($residents as $resident): ?>
                                             <option value="<?php echo $resident->id; ?>"><?php echo $resident->name; ?></option>
@@ -27,7 +27,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputAddress2">Date Reserved</label>
-                                        <input type="datetime-local" name="date_reserved" class="form-control" placeholder="Choose..."/>
+                                        <input type="date" name="date_reserved" class="form-control flatpickr" placeholder="Choose..."/>
                                     </div>
                                 </div>
                                 <div class="resources"></div>
@@ -40,11 +40,21 @@
                     </div>
                 </div>
             </main>
+            <?php include('application\views\menu\footer.php'); ?>
         </div>
     </div>
 
     <script>
         $(document).ready(() => {
+
+            // Set Flatpickr Instance
+            $('.flatpickr').flatpickr({
+                enableTime: true,
+                altInput: true,
+                altFormat: 'F j, Y',
+                dateFormat: 'Y-m-d H:i:s',
+                minDate: 'today'
+            });
 
             // All resources
             const resources = <?php echo json_encode($resources); ?>

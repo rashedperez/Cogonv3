@@ -32,11 +32,10 @@
 
                 return $reservation;
 
-            }, $this->reservation_model->get_reservations());
+            }, $this->reservation_model->get_unpaid_reservations());
 
             $this->load->view('menu/menubar');
             $this->load->view('reservation/reservation_list', $data);
-            $this->load->view('menu/footer');
         }
 
         // Add reservation view
@@ -48,7 +47,6 @@
 
             $this->load->view('menu/menubar');
             $this->load->view('reservation/reservation_view', $data);
-            $this->load->view('menu/footer');
         }
 
         // Add Reservation
@@ -188,7 +186,6 @@
 
             $this->load->view('menu/menubar');
             $this->load->view('reservation/reservation_edit', $data);
-            $this->load->view('menu/footer');
         }
         
         // Pay Reservation

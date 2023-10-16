@@ -71,11 +71,7 @@
                                                     <a href="<?php echo base_url('reservation/edit/' . $reservation->id); ?>" class="btn border-0 text-primary">
                                                         <i data-feather="edit"></i>
                                                     </a>
-                                                    <?php if ($reservation->date_paid): ?>
-                                                        <button class="btn btn-outline-success" data-bs-toggle="tooltip" data-bs-title="This reservation was paid on <?php echo date('F j, Y \a\t g:i A', strtotime($reservation->date_paid)); ?>.">Paid</button>
-                                                    <?php else: ?>
                                                     <button class="btn btn-outline-warning" data-toggle="modal" data-target="#reservation-payment" data-data='<?= json_encode($reservation) ?>'>Confirm Reservation</button>
-                                                    <?php endif ?>
                                                 </td>
                                             </tr>
                                             <?php endforeach; ?>
@@ -87,6 +83,7 @@
                     </div>
                 </div>
             </main>
+            <?php include('application\views\menu\footer.php'); ?>
         </div>
     </div>
 	<?php include('application\views\reservation\modals.php'); ?>
@@ -113,6 +110,14 @@
 
     <script>
         $(document).ready(() => {
+
+            // Set DataTable Instance
+            $('table').DataTable({
+                dom: 'Bfrtip',
+				responsive: true,
+				lengthChange: !1,
+                buttons: ['copy', 'print']
+			});
 
             // Event Listener for Pay Clicked
             $('.btn-pay').click(({ currentTarget }) => {
@@ -147,27 +152,11 @@
                         });
 
                         // Close modal
-                        $('.modal').modal('hide');
+                        $('#reservation-payment').modal('hide');
                     }
                 });
             });
         });
     </script>
-		
-	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			// Datatables with Buttons
-			var datatablesButtons = $("#datatables-buttons").DataTable({
-				responsive: true,
-				lengthChange: !1,
-				buttons: ["copy", "print"]
-			});
-			datatablesButtons.buttons().container().appendTo("#datatables-buttons_wrapper .col-md-6:eq(0)");
-
-            // Set Bootstrap Tooltip Instance
-            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-		});
-	</script>
 </body>
 </html>

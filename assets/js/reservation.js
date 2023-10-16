@@ -48,15 +48,25 @@ $('#reservation-payment').on('show.bs.modal', event => {
   resources_container.find('.row').not('.label').remove();
 
   // Add to container
-  data.resources.map(resource => {
-    const total_amount = (resource.data.price * resource.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 });
+  const subtotal_array = data.resources.map(resource => {
+    const subtotal = parseFloat(resource.data.price * resource.quantity);
     resources_container.append(`
       <div class="row" style="font-weight: 400">
         <div class="col-3 text-capitalize">` + resource.data.type + `</div>
         <div class="col-3 text-center">` + resource.data.name + `</div>
         <div class="col-3 text-center">` + resource.quantity + `</div>
-        <div class="col-3 text-right">₱` + total_amount + `</div>
+        <div class="col-3 text-right">₱` + subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 }) + `</div>
       </div>
     `);
+
+    return subtotal;
   });
+
+  // Display Total Amount
+  resources_container.append(`
+    <div class="row fw-bold d-flex justify-content-end mt-3">
+      <div class="col-3 text-center">Total Amount</div>
+      <div class="col-3 text-right total">₱` + (subtotal_array.reduce((total, current) => total + current, 0)).toLocaleString(undefined, { minimumFractionDigits: 2 })  + `</div>
+    </div>
+  `);
 });

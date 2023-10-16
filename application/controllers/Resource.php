@@ -10,7 +10,6 @@
             
             $this->load->view('menu/menubar');
             $this->load->view('resource/resources',$data);
-            $this->load->view('menu/footer');
         }
 
         // Add Resource
@@ -119,7 +118,6 @@
 
             $this->load->view('menu/menubar');
             $this->load->view('resource/rented',$data);
-            $this->load->view('menu/footer');
         }
         
     }

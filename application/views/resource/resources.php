@@ -86,6 +86,14 @@
     <script>
         $(document).ready(() => {
 
+            // Set DataTable Instance
+            $('table').DataTable({
+                dom: 'Bfrtip',
+				responsive: true,
+				lengthChange: !1,
+                buttons: ['copy', 'print']
+			});
+
             // Event Listener for delete
             $('.delete').click(({ currentTarget }) => {
 
@@ -111,17 +119,5 @@
             });
         });
     </script>
-		
-	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			// Datatables with Buttons
-			var datatablesButtons = $("#datatables-buttons").DataTable({
-				responsive: true,
-				lengthChange: !1,
-				buttons: ["copy", "print"]
-			});
-			datatablesButtons.buttons().container().appendTo("#datatables-buttons_wrapper .col-md-6:eq(0)");
-		});
-	</script>
 </body>
 </html>

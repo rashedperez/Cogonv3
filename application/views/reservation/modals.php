@@ -74,7 +74,11 @@
             <div class="col-3">Turon</div>
             <div class="col-3 text-center">Bababa baba nana</div>
             <div class="col-3 text-center">1</div>
-            <div class="col-3 text-right">₱50.00</div>
+            <div class="col-3 text-right">50.00</div>
+          </div>
+          <div class="row fw-bold d-flex justify-content-end">
+            <div class="col-3 text-center">Total Amount</div>
+            <div class="col-3 text-right total">₱<span>Amount</span></div>
           </div>
         </div>
         <p class="text-muted text-center">Clicking "confirm payment" means the resident has paid, confirming the reservation</p>

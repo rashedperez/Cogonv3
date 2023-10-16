@@ -10,7 +10,6 @@
 
             $this->load->view('menu/menubar');
             $this->load->view('resident/resident_view',$data);
-            $this->load->view('menu/footer');
         }
 
         // Add resident

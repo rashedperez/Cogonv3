@@ -27,7 +27,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputAddress2">Date Reserved</label>
-                                        <input type="datetime-local" name="date_reserved" class="form-control" placeholder="Choose..." value="<?php echo $reservation->date_reserved; ?>"/>
+                                        <input type="date" name="date_reserved" class="form-control flatpickr" placeholder="Choose..." value="<?php echo $reservation->date_reserved; ?>"/>
                                     </div>
                                 </div>
                                 <div class="resources">
@@ -72,6 +72,7 @@
                     </div>
                 </div>
             </main>
+            <?php include('application\views\menu\footer.php'); ?>
         </div>
     </div>
     

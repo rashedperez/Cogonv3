@@ -13,8 +13,11 @@
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&amp;display=swap" rel="stylesheet">
 	<link href="<?php echo base_url('assets/css/light.css');?>" rel="stylesheet">
 	<link class="js-stylesheet" href="<?php echo base_url('assets/css/light.css');?>" rel="stylesheet">
-	
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.1.6/sumoselect.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
 	<!-- Custom CSS -->
 	<style>
@@ -25,15 +28,44 @@
 			text-overflow: ellipsis;
 			max-width: 100%;
 		}
+
+		.dt-buttons {
+			position: relative !important;
+			display: inline-flex !important;
+			vertical-align: middle !important;
+		}
+
+		.dt-buttons > button {
+			position: relative !important;
+			flex: 1 1 auto !important;
+		}
+
+		/* Style the copy button */
+		.buttons-copy {
+			background-color: #495057 !important;
+			color: white !important;
+			border: none !important;
+			padding: 10px 15px !important;
+			margin-right: 0 !important;
+			border-top-left-radius: 8px !important;
+			border-bottom-left-radius: 8px !important;
+		}
+
+		/* Style the print button */
+		.buttons-print {
+			background-color: #495057 !important;
+			color: white !important;
+			border: none !important;
+			padding: 10px 15px !important;
+			border-top-right-radius: 8px !important;
+			border-bottom-right-radius: 8px !important;
+		}
 	</style>
 
 	<!-- END SETTINGS -->	
 </head>
 <!--SideBar--->
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="sticky">
-	<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.all.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar">		
 			<div class="sidebar-content js-simplebar " style="background-color: #e03444;">
@@ -115,6 +147,24 @@
 					</ul>
 				</div>
 			</nav>
+		<!-- </div> -->
+	<!-- </div> -->
 	<script src="<?php echo base_url('assets/js/app.js');?>"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.all.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.1.6/jquery.sumoselect.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+	<script>
+		$(document).ready(() => {
+			$('.sumoselect').SumoSelect({
+				search: true,
+				searchText: 'Search...'
+			});
+		});
+	</script>
+<!-- </body> -->
