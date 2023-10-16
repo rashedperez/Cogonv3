@@ -58,11 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-<<<<<<< HEAD
-$autoload['libraries'] = array('session','database');
-=======
 $autoload['libraries'] = array('session','database', 'form_validation');
->>>>>>> 645322d (Finished Resource and Add Reservation Feature)
 
 /*
 | -------------------------------------------------------------------
