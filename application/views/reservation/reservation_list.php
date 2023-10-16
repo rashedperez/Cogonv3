@@ -95,15 +95,15 @@
 			<?php $notification = $this->session->flashdata('reservation_status'); ?>
 
 			// Prompt Notification
-			Swal.mixin({
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				timer: 3000,
-			}).fire({
-				icon: '<?php echo $notification['type']; ?>',
-				title: '<?php echo $notification['message']; ?>'
-			});
+            window.notyf.open({
+                type: '<?php echo $notification['type']; ?>',
+                message: '<?php echo $notification['message']; ?>',
+                duration: 3000,
+                position: {
+                    x: 'right',
+                    y: 'top'
+                }
+            });
 
 		<?php endif ?>
 	</script>

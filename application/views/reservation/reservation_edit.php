@@ -79,6 +79,21 @@
     <script>
         $(document).ready(() => {
 
+            // Set Flatpickr Instance
+            $('.flatpickr').flatpickr({
+                enableTime: true,
+                altInput: true,
+                altFormat: 'F j, Y - h:i K',
+                dateFormat: 'Y-m-d H:i:s',
+                minDate: 'today'
+            });
+
+            // Set SumoSelect Instance
+            $('.sumoselect').SumoSelect({
+				search: true,
+				searchText: 'Search...'
+			});
+
             // All resources
             const resources = <?php echo json_encode($resources); ?>
 
