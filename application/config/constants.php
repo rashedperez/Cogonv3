@@ -92,5 +92,12 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 | These constants are used throughout the system.
 |
 */
+
+// Facility Types
 define('RESOURCE_FACILITY', 'facility');
 define('RESOURCE_AMENITY', 'amenity');
+
+// Resource Measurement
+define('HOUR', 'hour');
+define('KILOMETER', 'kilometer');
+define('QUANTITY', 'quantity');

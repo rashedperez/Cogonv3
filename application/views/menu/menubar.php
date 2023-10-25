@@ -28,6 +28,31 @@
 			text-overflow: ellipsis;
 			max-width: 100%;
 		}
+
+		.offcanvas {
+            width: 40%;
+            visibility: hidden;
+            transform: translateX(100%);
+            transition: all .2s;
+            border-radius:0; 
+            border-top: 2px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0px -4px 10px -4px rgba(0, 0, 0, 0.5);
+            display: block;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            height: 100%;
+            z-index: 1200;
+            background-color: #fff;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        .offcanvas.show {
+            visibility: visible;
+            transform: translateX(0);
+            transition: transform .2s;
+        }
 	</style>
 
 	<!-- END SETTINGS -->	

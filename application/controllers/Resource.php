@@ -18,6 +18,7 @@
             $data = array(
                 'type' => $this->input->post('type'),
                 'name' => $this->input->post('name'),
+                'measurement' => $this->input->post('per'),
                 'price' => $this->input->post('price'),
                 'quantity' => $this->input->post('quantity'),
                 'description'=> $this->input->post('description'),
@@ -43,6 +44,7 @@
             $data = array (
                 'type' => $this->input->post('type'),
                 'name' => $this->input->post('name'),
+                'measurement' => $this->input->post('per'),
                 'price' => $this->input->post('price'),
                 'quantity' => $this->input->post('quantity'),
                 'description'=> $this->input->post('description'),

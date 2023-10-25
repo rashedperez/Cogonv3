@@ -8,8 +8,9 @@ $('#resourceinfo').on('show.bs.modal', event => {
     modal.find('#type').text(data.type.charAt(0).toUpperCase() + data.type.slice(1));
     modal.find('#name').text(data.name);
     modal.find('#price') .text(data.price);
+    modal.find('#per') .text(data.measurement);
     modal.find('#quantity').text(data.quantity);
-    modal.find('#description').text(data.description);
+    modal.find('#description').text(data.description ? data.description : 'None');
 });
 
 $('#updateresourcemodal').on('show.bs.modal', event => {
@@ -21,6 +22,7 @@ $('#updateresourcemodal').on('show.bs.modal', event => {
   // Update Content
   modal.find('#type').val(data.type);
   modal.find('#name').val(data.name);
+  modal.find('#per') .val(data.measurement);
   modal.find('#price').val(data.price);
   modal.find('#quantity').val(data.quantity);
   modal.find('#description').val(data.description);

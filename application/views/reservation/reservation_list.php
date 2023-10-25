@@ -64,14 +64,26 @@
                                                 <td class="text-center"><?php echo $reservation->reserver; ?></td>
                                                 <td class="text-center"><?php echo date('F j, Y - g:i A', strtotime($reservation->date_reserved)); ?></td>
                                                 <td class="text-center">
-                                                    <!--Reservation Information Button-->
-                                                    <button class="btn border-0 text-info" data-toggle="modal" data-target="#reservationinfo" data-data='<?= json_encode($reservation) ?>'> 
-                                                        <i data-feather="info"></i>
-                                                    </button>
-                                                    <a href="<?php echo base_url('reservation/edit/' . $reservation->id); ?>" class="btn border-0 text-primary">
-                                                        <i data-feather="edit"></i>
-                                                    </a>
-                                                    <button class="btn btn-outline-warning" data-toggle="modal" data-target="#reservation-payment" data-data='<?= json_encode($reservation) ?>'>Confirm Reservation</button>
+                                                    <div class="d-flex">
+                                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#reservation-payment" data-data='<?= json_encode($reservation) ?>'>Confirm Reservation</button>
+                                                        <!-- Dropleft (Muabli sa wala ig click sa naay data-toggle="dropdown") -->
+                                                        <div class="dropleft">
+                                                            <!-- Three Dots Button-->
+                                                            <button class="btn btn-transparent p-1" data-toggle="dropdown" aria-expanded="false">
+                                                                <i data-feather="more-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <!-- Reservation Information Button-->
+                                                                <a class="dropdown-item border-0" data-toggle="modal" data-target="#reservationinfo" data-data='<?= json_encode($reservation) ?>'> 
+                                                                    <i class="mr-2" data-feather="info"></i>Info
+                                                                </a>
+                                                                <!-- Reservation Update Button-->
+                                                                <a href="<?php echo base_url('reservation/edit/' . $reservation->id); ?>" class="dropdown-item border-0">
+                                                                    <i class="mr-2" data-feather="edit"></i>Update
+                                                                </a>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             <?php endforeach; ?>

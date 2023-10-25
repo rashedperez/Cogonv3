@@ -40,6 +40,15 @@
               <!--End Resource Name -->
             </div>
             <div class = "col-md-6 mt-3">
+              <label for="validationCustom01" class="form-label font-weight-bold">Price per</label>
+              <select name="per" class="form-control">
+                <option selected disabled>Choose...</option>
+                <option value="<?php echo HOUR; ?>"><?php echo ucfirst(HOUR); ?></option>
+                <option value="<?php echo KILOMETER; ?>"><?php echo ucfirst(KILOMETER); ?></option>
+                <option value="<?php echo QUANTITY; ?>"><?php echo ucfirst(QUANTITY); ?></option>
+              </select>
+            </div>
+            <div class = "col-md-6 mt-3">
               <label for="validationCustom01" class="form-label font-weight-bold">Price</label>
               <div class = "input-group">
                 <span class = "input-group-text" id = "inputGroupPrepend">₱</span>
@@ -75,16 +84,14 @@
               ?>
             </div>
             <div class="col-12 mt-3">
-              <label for="validationCustom05" class="form-label font-weight-bold mt-2"> Description </label>
+              <label for="validationCustom05" class="form-label font-weight-bold mt-2"> Description <span class="text-muted">(Optional)</span></label>
                 <?php
                   // Resource Description
                   $addresource_desc_attr = array(
                       'rows' => '4',
                       'id' => 'description',
                       'class' => 'form-control',
-                      'name' => 'description',
-                      'placeholder' => '(Optional)',
-                      'required' => 'required'
+                      'name' => 'description'
                   );
 
                   echo form_textarea($addresource_desc_attr);
@@ -97,10 +104,10 @@
           <?php 
             // Add Resource Button
             $add_resource_attr = array(
-              'class' => 'btn btn-primary' ,
+              'class' => 'btn btn-success',
               'value' => 'Add Resource',
               'type' => 'submit',
-              'content' => 'Add Resource'
+              'content' => 'Save Resources'
             );
 
             echo form_button($add_resource_attr);
@@ -158,6 +165,15 @@
               <!--End Resource Name -->
             </div>
             <div class = "col-md-6 mt-3">
+              <label for="validationCustom01" class="form-label font-weight-bold">Price per</label>
+              <select id="per" name="per" class="form-control">
+                <option selected disabled>Choose...</option>
+                <option value="<?php echo HOUR; ?>"><?php echo ucfirst(HOUR); ?></option>
+                <option value="<?php echo KILOMETER; ?>"><?php echo ucfirst(KILOMETER); ?></option>
+                <option value="<?php echo QUANTITY; ?>"><?php echo ucfirst(QUANTITY); ?></option>
+              </select>
+            </div>
+            <div class = "col-md-6 mt-3">
               <label for="validationCustom01" class="form-label font-weight-bold">Price</label>
               <div class = "input-group">
                 <span class = "input-group-text" id = "inputGroupPrepend">₱</span>
@@ -193,7 +209,7 @@
               ?>
             </div>
             <div class="col-12 mt-3">
-              <label for="validationCustom05" class="form-label font-weight-bold mt-2"> Description </label>
+              <label for="validationCustom05" class="form-label font-weight-bold mt-2"> Description <span class="text-muted">(Optional)</span></label>
               <?php
                 // Resource Description
                 $updateresource_desc_attr = array(
@@ -201,7 +217,6 @@
                     'id' => 'description',
                     'class' => 'form-control',
                     'name' => 'description',
-                    'placeholder' => '(Optional)',
                     'required' => 'required'
                 );
 
@@ -215,7 +230,7 @@
           <?php 
             // Add Resource Button
             $update_resource_attr = array(
-              'class' => 'btn btn-primary',
+              'class' => 'btn btn-success',
               'value' => 'Update Resource',
               'type' => 'submit',
               'content' => 'Update Resource'
@@ -254,7 +269,7 @@
           <div class="col-8">
             <p id="name"></p>
           </div><div class="col-4">
-            <p class="font-weight-bolder">Price:</p>
+            <p class="font-weight-bolder">Price per <span id="per"></span>:</p>
           </div>
           <div class="col-8">
             <p>₱<span id="price"></span></p>

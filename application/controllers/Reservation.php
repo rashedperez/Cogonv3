@@ -1,8 +1,8 @@
 <?php
-    class Reservation extends CI_Controller{
+    class Reservation extends CI_Controller {
 
-        public function _construct() {
-            parent::_construct();
+        public function __construct() {
+            parent::__construct();
         }
 
         // Reservation list
