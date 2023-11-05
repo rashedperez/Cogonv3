@@ -56,6 +56,33 @@
                                                 <label for="inputresident">Quantity</label>
                                                 <input type="number" name="quantity[]" class="form-control watch-change quantity" min="0" placeholder="" value="<?php echo $resource->quantity; ?>"/>
                                             </div>
+                                            <div class="form-group col-md-6 vehicle-details" <?php echo $resource->data->measurement == KILOMETER ? '' : 'style="display: none"'; ?>>
+                                                <label>Rental Fee</label>
+                                                <input type="number" name="rental_fee[]" class="form-control" min="0" placeholder="" value="<?php echo $resource->rental_fee; ?>"/>
+                                            </div>
+                                            <div class="form-group col-md-6 vehicle-details" <?php echo $resource->data->measurement == KILOMETER ? '' : 'style="display: none"'; ?>>
+                                                <label>
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="has_driver[]" <?php echo $resource->has_driver ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label">I have a driver</label>
+                                                    </div>
+                                                </label>
+                                                <input type="<?php echo $resource->has_driver ? 'text' : 'number'; ?>" class="form-control" name="driver_name[]" placeholder="<?php echo $resource->has_driver ? 'Enter Driver\'s Name' : 'Driver Service Fee'; ?>" value="<?php echo $resource->driver; ?>"/>
+                                            </div>
+                                            <div class="form-group col-md-6 partial-hidden">
+                                                <label class="purpose-label">Purpose</label>
+                                                <select class="form-control" name="purpose[]">
+                                                    <option selected disabled>Choose...</option>
+                                                    <option value="Religious Activity" <?php echo $resource->purpose == 'Religious Activity' ? 'selected' : ''; ?>>Religious Activity</option>
+                                                    <option value="Govt. Activity" <?php echo $resource->purpose == 'Govt. Activity' ? 'selected' : ''; ?>>Govt. Activity</option>
+                                                    <option value="Burial" <?php echo $resource->purpose == 'Burial' ? 'selected' : ''; ?>>Burial</option>
+                                                    <option value="Others" <?php echo $resource->purpose == 'Others' ? 'selected' : ''; ?>>Others</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6 others" <?php echo in_array($resource->purpose, ['Burial', 'Others']) ? ''  : 'style="display: none"'; ?>>
+                                                <label>Name of deceased</label>
+                                                <input type="text" name="others[]" class="form-control" value="<?php echo $resource->purpose_specific; ?>"/>
+                                            </div>
                                         </div>
                                         <div class="price-div">
                                             <b>Price:</b><span class="price ml-2">₱<span><?php echo number_format($resource->data->price * $resource->quantity, 2); ?></span></span>
@@ -161,8 +188,8 @@
             });
 
             // Reset event listeners
-            function reset_event_listeners()
-            {
+            function reset_event_listeners() {
+
                 // Event Listener for type select when changed
                 $('.type').unbind('change').change(({ currentTarget }) => {
 
@@ -179,11 +206,11 @@
                     const selected_resource_types = resources.filter(x => x.type == type_selected);
 
                     // Add to resource select
-                    const resource_select = $(currentTarget).closest('.resource').find('.resource-item');
+                    const resource_selected = $(currentTarget).closest('.resource').find('.resource-item').val();
 
                     // Display all but preselect default
                     $(currentTarget).closest('.resource').find('.resource-item').empty().append(`
-                        ` + (selected_resource_types.map(x => `<option value="` + x.id + `" ` + (x.id == resource_select.val() ? 'selected' : '') + `>` + x.name + `</option>`)) + `
+                        ` + (selected_resource_types.map(x => `<option value="` + x.id + `" ` + (x.id == resource_selected ? 'selected' : '') + `>` + x.name + `</option>`)) + `
                     `);
                 });
 
@@ -209,6 +236,36 @@
                         resource_element.find('.price span').text(new_price).closest('.price-div').show();
                     }
                 });
+
+                // Minaw mausab ang resource-item
+                $('.resource-item').change(({ currentTarget }) => {
+
+                    // Pangitaon ang gipili nga resource
+                    const resource_selected = resources.find(x => x.id == currentTarget.value);
+                    const resource_element = $(currentTarget).closest('.resource');
+
+                    // Ipakita ang uban details sa vehicle
+                    if (resource_selected.measurement === '<?php echo KILOMETER; ?>') {
+                        
+                        resource_element.find('.vehicle-details').show();
+                        resource_element.find('.btn-map').show();
+
+                        // Bantay mausab ang has driver
+                        resource_element.find('[name="has_driver[]"]').unbind('change').change(({ currentTarget }) => {
+
+                            // Tan awn ug gicheckan ba ang naay driver
+                            const has_driver = $(currentTarget).is(':checked');
+
+                            // Usbon placeholder
+                            resource_element.find('[name="driver_name[]"]').attr('type', has_driver ? 'text' : 'number').attr('placeholder', has_driver ? 'Enter Driver\'s Name' : 'Driver Service Fee')
+                        });
+                    }
+                    else {
+                        resource_element.find('.vehicle-details').hide();
+                        resource_element.find('.btn-map').hide();
+                    }
+                });
+
 
                 // Event Listener for remove
                 $('.remove').unbind('click').click(({ currentTarget }) => {

@@ -12,94 +12,65 @@
       residentContactnumUpdate.val(data.contact_num);
       residentIdUpdate.val(data.id);
    });
-console.log($("#added_resident_success"))
 
-// Add Resident Notification
-   if($("#added_resident_success").length > 0)
-{
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      
-      Toast.fire({
-        icon: 'success',
-        title: 'Successfully Added New Resident'
-      })
-}
-else if ($("#added_resident_failed").length > 0)
-{
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      
-      Toast.fire({
-        icon: 'success',
-        title: 'Unsuccessful Added New Resident'
-      })
-}
+// Bantay nay mosubmit nga form
+$('form').on('submit', (e) => {
 
-// Update Resident Notification
-if($("#update_resident_success").length > 0)
-{
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      
-      Toast.fire({
-        icon: 'success',
-        title: 'Successfully Updated Resident'
-      })
-}
-else if ($("#update_resident_failed").length > 0)
-{
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      
-      Toast.fire({
-        icon: 'danger',
-        title: 'Unsuccessful'
-      })
-}
+  // Dili isubmit
+  e.preventDefault();
 
-// Delete Resident Notification
-if($("#delete_resident_success").length > 0)
-{
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-      })
+  // Disable ang nagsubmit
+  const submitter = $(e.originalEvent.submitter).prop('disabled', true);
+
+  // Get form data
+  $.ajax({
+    url: e.target.action,
+    method: 'POST',
+    dataType: 'json',
+    data: $(e.target).serialize(),
+    success: ({ status, message, redirect }) => {
       
-      Toast.fire({
-        icon: 'success',
-        title: 'Successfully Deleted Resident'
-      })
-}
-else if ($("#delete_resident_failed").length > 0)
-{
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      
-      Toast.fire({
-        icon: 'success',
-        title: 'Success to Delete Resident'
-      })
-}
+      // Show message if there is
+      if (message) {
+        Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+        }).fire({
+          icon: message.type,
+          title: message.message
+        });
+      }
+
+      // Check if status is ok and redirect
+      if (status && status == true) {
+        window.location.replace(redirect);
+
+        return true;
+      }
+
+      // Enable ang gasubmit
+      submitter.prop('disabled', false);
+    },
+    error: () => {
+      // Show error
+			Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+			}).fire({
+				icon: 'error',
+				title: 'Something went wrong. Please try again later'
+			});
+
+      // Enable ang gasubmit
+      submitter.prop('disabled', false);
+    }
+  });
+
+
+  // Dili isubmit
+  return false;
+});

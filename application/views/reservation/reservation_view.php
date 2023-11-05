@@ -27,7 +27,7 @@
                                                 <p class="mb-0" style="font-weight: 500">Contact Number: <span>09123456789</span></p>
                                                 <div class="spinner-border spinner-border-sm text-secondary ml-3" role="status" style="display: none"></div>
                                                 <a href="#" id="generate-otp" class="btn-link text-success ml-3" style="font-weight: bold">Send Code</a>
-                                                <button class="btn btn-transparent p-0 ml-3 disabled resend" style="display: none">resend after <span>200s</span></button>
+                                                <button type="button" class="btn btn-transparent p-0 ml-3 disabled resend" style="display: none">resend after <span>200s</span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -252,12 +252,54 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="form-group col-md-6 vehicle-details" style="display: none">
+                                <label>Rental Fee</label>
+                                <input type="number" name="rental_fee[]" class="form-control" min="0" placeholder=""/>
+                            </div>
+                            <div class="form-group col-md-6 vehicle-details" style="display: none">
+                                <label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="has_driver[]">
+                                        <label class="form-check-label">I have a driver</label>
+                                    </div>
+                                </label>
+                                <input type="number" class="form-control" name="driver_name[]" placeholder="Driver Service Fee"/>
+                            </div>
+                            <div class="form-group col-md-6 partial-hidden" style="display: none">
+                                <label class="purpose-label">Purpose</label>
+                                <select class="form-control" name="purpose[]">
+                                    <option selected disabled>Choose...</option>
+                                    <option value="Religious Activity">Religious Activity</option>
+                                    <option value="Govt. Activity">Govt. Activity</option>
+                                    <option value="Burial">Burial</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 others" style="display: none">
+                                <label>Name of deceased</label>
+                                <input type="text" name="others[]" class="form-control" placeholder=""/>
+                            </div>
                         </div>
                         <div class="price-div" style="display: none">
                             <b>Price:</b><span class="price ml-2">₱<span>Price</span></span>
                         </div>
                     </div>
                 `);
+
+                // Bantay mausab ang purpose
+                $('[name="purpose[]"]').change(({ currentTarget }) => {
+                    
+                    const resource_element = $(currentTarget).closest('.resource');
+                    const show_others = ['Burial', 'Others'].includes(currentTarget.value);
+
+                    // Tan awn if ishow ang uban
+                    if (show_others) {
+                        resource_element.find('.others').show().find('label').text(currentTarget.value == 'Burial' ? 'Name of deceased' : 'Please specify');
+                    }
+                    else {
+                        resource_element.find('.others').hide().find('input').val('');
+                    }
+                });
 
                 // Event Listener for type select when changed
                 $('.type').unbind('change').change(({ currentTarget }) => {
@@ -307,13 +349,27 @@
 
                     // Pangitaon ang gipili nga resource
                     const resource_selected = resources.find(x => x.id == currentTarget.value);
+                    const resource_element = $(currentTarget).closest('.resource');
 
-                    // Ipakita ang map button sa
+                    // Ipakita ang uban details sa vehicle
                     if (resource_selected.measurement === '<?php echo KILOMETER; ?>') {
-                        $(currentTarget).closest('.resource').find('.btn-map').show();
+
+                        resource_element.find('.vehicle-details').show();
+                        resource_element.find('.btn-map').show();
+
+                        // Bantay mausab ang has driver
+                        resource_element.find('[name="has_driver[]"]').unbind('change').change(({ currentTarget }) => {
+
+                            // Tan awn ug gicheckan ba ang naay driver
+                            const has_driver = $(currentTarget).is(':checked');
+
+                            // Usbon placeholder
+                            resource_element.find('[name="driver_name[]"]').attr('type', has_driver ? 'text' : 'number').attr('placeholder', has_driver ? 'Enter Driver\'s Name' : 'Driver Service Fee')
+                        });
                     }
                     else {
-                        $(currentTarget).closest('.resource').find('.btn-map').hide();
+                        resource_element.find('.vehicle-details').hide();
+                        resource_element.find('.btn-map').hide();
                     }
 
                     // Update Resource Quantity Label with uppercase first letter

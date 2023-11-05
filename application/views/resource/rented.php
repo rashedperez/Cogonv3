@@ -18,7 +18,7 @@
                                                 <th class="text-center">Reserved Resources</th>
                                                 <th class="text-center">Reserver</th>
                                                 <th class="text-center">Date Reserved</th>
-                                                <th class="text-center">Total Amount Paid</th>
+                                                <th class="text-center"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -62,7 +62,29 @@
                                                 </td>
                                                 <td class="text-center"><?php echo $reservation->reserver; ?></td>
                                                 <td class="text-center"><?php echo date('F j, Y - g:i A', strtotime($reservation->date_reserved)); ?></td>
-                                                <td class="text-center">₱<?php echo $reservation->total_amount_paid; ?> </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex">
+                                                        <?php $is_cancelled = $reservation->status == CANCELLED; ?>
+                                                        <button class="btn btn-outline-danger btn-sm btn-cancel" data-data="<?php echo $reservation->id; ?>" style="font-weight: 500" <?php echo $is_cancelled ? 'disabled' : ''; ?>><?php echo $is_cancelled ? 'Cancelled' : 'Cancel Reservation'; ?></button>
+                                                        <!-- Dropleft (Muabli sa wala ig click sa naay data-toggle="dropdown") -->
+                                                        <div class="dropleft">
+                                                            <!-- Three Dots Button-->
+                                                            <button class="btn btn-transparent p-1" data-toggle="dropdown" aria-expanded="false">
+                                                                <i data-feather="more-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <!-- Reservation Information Button-->
+                                                                <a class="dropdown-item border-0" data-toggle="modal" data-target="#reservationinfo" data-data='<?= json_encode($reservation) ?>'> 
+                                                                    <i class="mr-2" data-feather="info"></i>Info
+                                                                </a>
+                                                                <!-- Reservation Print Button-->
+                                                                <a href="#" class="dropdown-item border-0 print">
+                                                                    <i class="mr-2" data-feather="printer"></i>Print Details
+                                                                </a>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </td>
                                             </tr>
                                             <?php endforeach; ?>
                                         </tbody>

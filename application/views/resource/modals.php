@@ -49,7 +49,7 @@
               </select>
             </div>
             <div class = "col-md-6 mt-3">
-              <label for="validationCustom01" class="form-label font-weight-bold">Price</label>
+              <label for="validationCustom01" class="form-label font-weight-bold price-label">Price</label>
               <div class = "input-group">
                 <span class = "input-group-text" id = "inputGroupPrepend">₱</span>
                 <?php 
@@ -67,6 +67,20 @@
                 ?>
               </div>
             </div>
+            <div class="col-md-6 mt-3" style="display: none">
+              <label for="validationCustom05" class="from-label font-weight-bold">Rental Fee</label>
+              <?php
+                $resource_rental_fee_attr = array(
+                  'id' => 'rental-fee',
+                  'class' => 'form-control rental-fee',
+                  'name' => 'rental_fee',
+                  'placeholder' => '',
+                  'type' => 'number'
+                );
+
+                echo form_input($resource_rental_fee_attr);
+              ?>
+            </div>
             <div class="col-md-6 mt-3">
               <label for="validationCustom05" class="from-label font-weight-bold">Quantity</label>
               <?php
@@ -75,7 +89,7 @@
                   'id' => 'quantity',
                   'class' => 'form-control',
                   'name' => 'quantity',
-                  'placeholder' => '0',
+                  'placeholder' => '',
                   'required' => 'required',
                   'type' => 'number'
                 );
@@ -174,7 +188,7 @@
               </select>
             </div>
             <div class = "col-md-6 mt-3">
-              <label for="validationCustom01" class="form-label font-weight-bold">Price</label>
+              <label for="validationCustom01" class="form-label font-weight-bold price-label">Price</label>
               <div class = "input-group">
                 <span class = "input-group-text" id = "inputGroupPrepend">₱</span>
                 <?php 
@@ -192,6 +206,20 @@
                 ?>
               </div>
             </div>
+            <div class="col-md-6 mt-3" style="display: none">
+              <label for="validationCustom05" class="from-label font-weight-bold">Rental Fee</label>
+              <?php
+                $resource_rental_fee_attr = array(
+                  'id' => 'rental-fee',
+                  'class' => 'form-control rental-fee',
+                  'name' => 'rental_fee',
+                  'placeholder' => '',
+                  'type' => 'number'
+                );
+
+                echo form_input($resource_rental_fee_attr);
+              ?>
+            </div>
             <div class="col-md-6 mt-3">
               <label for="validationCustom05" class="from-label font-weight-bold">Quantity</label>
               <?php
@@ -200,7 +228,7 @@
                   'id' => 'quantity',
                   'class' => 'form-control',
                   'name' => 'quantity',
-                  'placeholder' => '0',
+                  'placeholder' => '',
                   'required' => 'required',
                   'type' => 'number'
                 );

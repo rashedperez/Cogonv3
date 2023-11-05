@@ -117,5 +117,23 @@
 
             return $result;
         }
+
+        // Get Today's Reservation
+        public function get_todays_reservations()
+        {
+            $this->db->where('DATE_FORMAT(date_reserved, "%Y-%m-%d") =', date('Y-m-d'));
+            $query = $this->db->get('reservation');
+
+            return $query->result();
+        }
+
+        // Get Upcoming Reservation
+        public function get_upcoming_reservations()
+        {
+            $this->db->where('DATE_FORMAT(date_reserved, "%Y-%m-%d") >', date('Y-m-d'));
+            $query = $this->db->get('reservation');
+
+            return $query->result();
+        }
     }
 ?>

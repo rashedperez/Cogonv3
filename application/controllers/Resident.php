@@ -15,54 +15,87 @@
         // Add resident
         public function add()
         {
-            $data = array(
-                'name' => $this->input->post('name'),
-                'address' => $this->input->post('address'),
-                'contact_num' => $this->input->post('contact_num'),
-            );
+            // Set validation
+            $this->form_validation->set_error_delimiters('', '');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('contact_num', 'Contact Number', 'trim|required|max_length[30]');
 
-            // Save attempt
-            if ($this->resident_model->save_resident($data))
-            {
-                // Saving the resident data through the resident_model
-                $this->session->set_flashdata('resident_status', ['type' => 'success', 'message' => 'Successfully Added New Resident']);
+            // Run validation
+            if ($this->form_validation->run()) {
+
+                $data = array(
+                    'name' => $this->input->post('name'),
+                    'address' => $this->input->post('address'),
+                    'contact_num' => $this->input->post('contact_num'),
+                );
+    
+                // Save attempt
+                if ($this->resident_model->save_resident($data)) {
+
+                    $response = array(
+                        'status' => TRUE,
+                        'redirect' => base_url('resident/resident_index')
+                    );
+
+                    // Saving the resident data through the resident_model
+                    $this->session->set_flashdata('resident_status', ['type' => 'success', 'message' => 'Successfully Added New Resident']);
+                }
+                else {
+                    $response['message'] = ['type' => 'error', 'message' => 'Unsuccessful Added New Resident'];
+                }
             }
-            else
-            {
-                // Redirecting to Add resident View if the add resident fails
-                $this->session->set_flashdata('resident_status', ['type' => 'error', 'message' => 'Unsuccessful Added New Resident']);
+            else {
+                $response['message'] = ['type' => 'error', 'message' => validation_errors()];
             }
             
-            redirect('resident/resident_index');
+            echo json_encode($response);
         }
 
         // Update resident
         public function update()
         {
-            $data = array (
-                'name' => $this->input->post('name'),
-                'address' => $this->input->post('address'),
-                'contact_num' => $this->input->post('contact_num'),
-            );
+            // Set validation
+            $this->form_validation->set_error_delimiters('', '');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('contact_num', 'Contact Number', 'trim|required|max_length[30]');
 
-            // Update Data
-            if($this->resident_model->update_resident($this->input->post('id'), $data))
-            {
-                $this->session->set_flashdata('resident_status', ['type' => 'success', 'message' => 'Successfully Updated Resident']);
+            // Run validation
+            if ($this->form_validation->run()) {
+
+                $data = array (
+                    'name' => $this->input->post('name'),
+                    'address' => $this->input->post('address'),
+                    'contact_num' => $this->input->post('contact_num'),
+                );
+
+                // Update Data
+                if ($this->resident_model->update_resident($this->input->post('id'), $data)) {
+                    
+                    $response = array(
+                        'status' => TRUE,
+                        'redirect' => base_url('resident/resident_index')
+                    );
+
+                    $this->session->set_flashdata('resident_status', ['type' => 'success', 'message' => 'Successfully Updated Resident']);
+                }
+                else {
+                    $response['message'] = ['type' => 'error', 'message' => 'Failed to Update Resident'];
+                }
             }
-            else
-            {
-                $this->session->set_flashdata('resident_status', ['type' => 'error', 'message' => 'Failed to Update Resident']);
+            else {
+                $response['message'] = ['type' => 'error', 'message' => validation_errors()];
             }
             
-            redirect('resident/resident_index');
+            echo json_encode($response);
         }
 
         // Delete resident
         public function delete($delete_id)
         {
             // Delete attempt
-            if($this->resident_model->delete_resident($delete_id))
+            if ($this->resident_model->delete_resident($delete_id))
             {
                 $this->session->set_flashdata('resident_status', ['type' => 'success', 'message' => 'Successfully Deleted Resident']);
             }

@@ -101,3 +101,8 @@ define('RESOURCE_AMENITY', 'amenity');
 define('HOUR', 'hour');
 define('KILOMETER', 'kilometer');
 define('QUANTITY', 'quantity');
+
+// Reservation Status
+define('PENDING', 'pending');
+define('CONFIRMED', 'confirmed');
+define('CANCELLED', 'cancelled');

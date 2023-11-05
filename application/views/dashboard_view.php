@@ -1,4 +1,4 @@
-<main class="content">
+			<main class="content">
 				<div class="container-fluid p-0">
 
 					<div class="row mb-2 mb-xl-3">
@@ -15,7 +15,7 @@
 								<div class="card-body py-4">
 									<div class="media">
 										<div class="media-body">
-											<h3 class="mb-2">2</h3>
+											<h3 class="mb-2"><?php echo count($todays); ?></h3>
 											<p class="mb-2">Today's Reservation</p>
 										</div>
 										<div class="d-inline-block ml-3">
@@ -32,7 +32,7 @@
 								<div class="card-body py-4">
 									<div class="media">
 										<div class="media-body">
-											<h3 class="mb-2">43</h3>
+											<h3 class="mb-2"><?php echo count($upcoming); ?></h3>
 											<p class="mb-2">Upcoming Reservation</p>
 										</div>
 										<div class="d-inline-block ml-3">
@@ -62,7 +62,7 @@
 							</div>
 						</div>
 					</div>
-					</div>
+				</div>
 			</main>
       <!-- Calendar Script -->
 	<script>

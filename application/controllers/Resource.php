@@ -15,52 +15,92 @@
         // Add Resource
         public function add()
         {
-            $data = array(
-                'type' => $this->input->post('type'),
-                'name' => $this->input->post('name'),
-                'measurement' => $this->input->post('per'),
-                'price' => $this->input->post('price'),
-                'quantity' => $this->input->post('quantity'),
-                'description'=> $this->input->post('description'),
-            );
+            // Set validation
+            $this->form_validation->set_error_delimiters('', '');
+            $this->form_validation->set_rules('type', 'Type', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('per', 'Measurement', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('price', 'Price', 'trim|required|numeric|max_length[30]');
+            $this->form_validation->set_rules('quantity', 'Quantity', 'trim|required|numeric|max_length[30]');
+            $this->form_validation->set_rules('description', 'Description', 'trim|max_length[100]');
 
-            // Save Attempt with based-result notification
-            if ($this->resource_model->save_resource($data))
-            {
-                $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Successfully Added New Resource']);
-            }
-            else
-            {
-                $this->session->set_flashdata('resource_status', ['type' => 'error', 'message' => 'Failed To Add New Resource']);
-            }
+            // Run validation
+            if ($this->form_validation->run()) {
 
+                $data = array(
+                    'type' => $this->input->post('type'),
+                    'name' => $this->input->post('name'),
+                    'measurement' => $this->input->post('per'),
+                    'price' => $this->input->post('price'),
+                    'quantity' => $this->input->post('quantity'),
+                    'description'=> $this->input->post('description')
+                );
+    
+                // Save Attempt with based-result notification
+                if ($this->resource_model->save_resource($data)) {
+
+                    $response = array(
+                        'status' => TRUE,
+                        'redirect' => base_url('resource/resource_index')
+                    );
+
+                    $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Successfully Added New Resource']);
+                }
+                else {
+                    $response['message'] = ['type' => 'error', 'message' => 'Failed To Add New Resource'];
+                }
+            }
+            else {
+                $response['message'] = ['type' => 'error', 'message' => validation_errors()];
+            }
             
-            redirect('resource/resource_index');
+            echo json_encode($response);
         }
 
         // Update Resource
         public function update()
         {
-            $data = array (
-                'type' => $this->input->post('type'),
-                'name' => $this->input->post('name'),
-                'measurement' => $this->input->post('per'),
-                'price' => $this->input->post('price'),
-                'quantity' => $this->input->post('quantity'),
-                'description'=> $this->input->post('description'),
-            );
 
-            // Update Data
-            if($this->resource_model->update_resource($this->input->post('id'), $data))
-            {
-                $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Successfully Updated Resource']);
-            }
-            else
-            {
-                $this->session->set_flashdata('resource_status', ['type' => 'error', 'message' => 'Failed To Update Resource']);
-            }
+            // Set validation
+            $this->form_validation->set_error_delimiters('', '');
+            $this->form_validation->set_rules('type', 'Type', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('per', 'Measurement', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('price', 'Price', 'trim|required|numeric|max_length[30]');
+            $this->form_validation->set_rules('quantity', 'Quantity', 'trim|required|numeric|max_length[30]');
+            $this->form_validation->set_rules('description', 'Description', 'trim|max_length[100]');
 
-            redirect('resource/resource_index');
+            // Run validation
+            if ($this->form_validation->run()) {
+
+                $data = array (
+                    'type' => $this->input->post('type'),
+                    'name' => $this->input->post('name'),
+                    'measurement' => $this->input->post('per'),
+                    'price' => $this->input->post('price'),
+                    'quantity' => $this->input->post('quantity'),
+                    'description'=> $this->input->post('description')
+                );
+
+                // Update Data
+                if ($this->resource_model->update_resource($this->input->post('id'), $data)) {
+
+                    $response = array(
+                        'status' => TRUE,
+                        'redirect' => base_url('resource/resource_index')
+                    );
+
+                    $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'Successfully Updated Resource']);
+                }
+                else {
+                    $response['message'] = ['type' => 'error', 'message' => 'Failed To Update Resource'];
+                }
+            }
+            else {
+                $response['message'] = ['type' => 'error', 'message' => validation_errors()];
+            }
+            
+            echo json_encode($response);
         }
 
         // Delete Resource
@@ -88,6 +128,9 @@
                 // Formatted ID
                 $reservation->formatted_id = format_reservation_id($reservation->id);
 
+                // Foramatted Reference Number
+                $reservation->reference_number = format_reference_number($reservation->id);
+
                 // Get reserver
                 $reservation->reserver = $this->resident_model->get_resident_by_id($reservation->Res_id)->name;
 
@@ -99,6 +142,9 @@
 
                     // Get Data
                     $resource->data = $this->resource_model->get_resource_by_id($resource->resource_id);
+
+                    // Format Quantity
+                    $resource->formatted_quantity = format_short_quantity($resource->data->measurement, $resource->quantity);
 
                     return $resource;
 
