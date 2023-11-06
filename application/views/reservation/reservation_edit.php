@@ -93,7 +93,7 @@
                                 <div class="w-100">
                                     <button type="button" class="btn btn-primary btn-new">Add New Resource</button>
                                 </div>
-                                <button type="button" class="btn btn-success btn-submit float-right">Update</button>
+                                <button type="submit" class="btn btn-success btn-submit float-right">Update</button>
                             <?php echo form_close(); ?>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
             const resources = <?php echo json_encode($resources); ?>
 
             // Event Listener for add resource
-            $('.btn-new').click(() => {
+            $('.btn-new').click((e) => {
 
                 // Include to resources
                 $('.resources').append(`
@@ -135,7 +135,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-3">
-                                <label for="inputresident">Type of Reservation</label>
+                                <label>Type of Reservation</label>
                                 <select class="form-control type" name="type[]">
                                     <option selected disabled>Choose...</option>
                                     <option value="<?php echo RESOURCE_FACILITY; ?>"><?php echo ucfirst(RESOURCE_FACILITY); ?></option>
@@ -143,52 +143,173 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-6 partial-hidden" style="display: none">
-                                <label for="inputresident" class="resource-label">Resource</label>
+                                <label class="resource-label">Resource</label>
                                 <select class="form-control watch-change resource-item" name="resource[]">
                                     <option selected disabled>Choose...</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-3 partial-hidden" style="display: none">
-                                <label for="inputresident">Quantity</label>
-                                <input type="number" name="quantity[]" class="form-control watch-change quantity" min="0" placeholder=""/>
+                                <label class="qty-label">Quantity</label>
+                                <div class="input-group">
+                                    <input type="number" name="quantity[]" class="form-control watch-change quantity" min="0" placeholder=""/>
+                                    <button type="button"
+                                        class="btn btn-primary btn-map text-white"
+                                        data-toggle="offcanvas"
+                                        data-target="#map-canvas"
+                                        style="display: none"
+                                    >
+                                        Map
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 vehicle-details" style="display: none">
+                                <label>Rental Fee</label>
+                                <input type="number" name="rental_fee[]" class="form-control watch-change" min="0" placeholder=""/>
+                            </div>
+                            <div class="form-group col-md-6 vehicle-details" style="display: none">
+                                <label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="has_driver[]">
+                                        <label class="form-check-label">I have a driver</label>
+                                    </div>
+                                </label>
+                                <input type="number" class="form-control" name="driver_name[]" placeholder="Driver Service Fee"/>
+                            </div>
+                            <div class="form-group col-md-6 partial-hidden" style="display: none">
+                                <label class="purpose-label">Purpose</label>
+                                <select class="form-control" name="purpose[]">
+                                    <option selected disabled>Choose...</option>
+                                    <option value="Religious Activity">Religious Activity</option>
+                                    <option value="Govt. Activity">Govt. Activity</option>
+                                    <option value="Burial">Burial</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 others" style="display: none">
+                                <label>Name of deceased</label>
+                                <input type="text" name="others[]" class="form-control" placeholder=""/>
                             </div>
                         </div>
                         <div class="price-div" style="display: none">
                             <b>Price:</b><span class="price ml-2">₱<span>Price</span></span>
                         </div>
                     </div>
-                `);    
+                `);
 
                 // Reset event listeners
                 reset_event_listeners();
             });
 
             // Event Listener for submit
-            $('.btn-submit').click(() => {
+            $('.btn-submit').click((e) => {
 
-                // Show confirmation
-                Swal.fire({
-                    title: 'Confirm Reservation Update',
-                    text: 'Confirm that the provided information is accurate and requires no changes',
-                    showDenyButton: true,
-                    confirmButtonText: 'Confirm',
-                    confirmButtonColor: '#4bbf73',
-                    denyButtonText: 'Cancel',
-                    denyButtonColor: '#495057',
-                    reverseButtons: true
-                }).then((result) => {
-                    
-                    // Confirmed
-                    if (result.isConfirmed) {
+                // Tan awn ug ipasubmit ba
+                if (!$(e.currentTarget).attr('data-submit')) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Show confirmation
+                    Swal.fire({
+                        title: 'Confirm Reservation',
+                        text: 'Confirm that the provided information is accurate and requires no changes',
+                        showDenyButton: true,
+                        confirmButtonText: 'Confirm',
+                        confirmButtonColor: '#4bbf73',
+                        denyButtonText: 'Cancel',
+                        denyButtonColor: '#495057',
+                        reverseButtons: true
+                    }).then((result) => {
                         
-                        // Submit form
-                        $('form').trigger('submit');
+                        // Confirmed
+                        if (result.isConfirmed) {
+                            
+                            // Submit form
+                            $(e.currentTarget).attr('data-submit', true).trigger('click');
+                        }
+                    });
+                }
+            });
+
+            // Bantay nay mosubmit nga form
+            $('form').on('submit', (e) => {
+
+                // Dili isubmit
+                e.preventDefault();
+
+                // Disable ang nagsubmit
+                const submitter = $(e.originalEvent.submitter).prop('disabled', true);
+
+                // Get form data
+                $.ajax({
+                    url: e.target.action,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: $(e.target).serialize(),
+                    success: ({ status, message, redirect }) => {
+                        
+                        // Show message if there is
+                        if (message) {
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        }).fire({
+                            icon: message.type,
+                            title: message.message
+                        });
+                        }
+
+                        // Check if status is ok and redirect
+                        if (status && status == true) {
+                        window.location.replace(redirect);
+
+                        return true;
+                        }
+
+                        // Enable ang gasubmit
+                        submitter.prop('disabled', false);
+                    },
+                    error: () => {
+                        // Show error
+                            Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                            }).fire({
+                                icon: 'error',
+                                title: 'Something went wrong. Please try again later'
+                            });
+
+                        // Enable ang gasubmit
+                        submitter.prop('disabled', false);
                     }
                 });
+
+
+                // Dili isubmit
+                return false;
             });
 
             // Reset event listeners
             function reset_event_listeners() {
+
+                // Bantay mausab ang purpose
+                $('[name="purpose[]"]').change(({ currentTarget }) => {
+                    
+                    const resource_element = $(currentTarget).closest('.resource');
+                    const show_others = ['Burial', 'Others'].includes(currentTarget.value);
+
+                    // Tan awn if ishow ang uban
+                    if (show_others) {
+                        resource_element.find('.others').show().find('label').text(currentTarget.value == 'Burial' ? 'Name of deceased' : 'Please specify');
+                    }
+                    else {
+                        resource_element.find('.others').hide().find('input').val('');
+                    }
+                });
 
                 // Event Listener for type select when changed
                 $('.type').unbind('change').change(({ currentTarget }) => {
@@ -198,9 +319,6 @@
 
                     // Selected type
                     const type_selected = currentTarget.value;
-
-                    // Update Resource Label with uppercase first letter
-                    $(currentTarget).closest('.resource').find('.resource-label').text(type_selected.charAt(0).toUpperCase() + type_selected.slice(1));
 
                     // Get all resources with selected type
                     const selected_resource_types = resources.filter(x => x.type == type_selected);
@@ -212,6 +330,9 @@
                     $(currentTarget).closest('.resource').find('.resource-item').empty().append(`
                         ` + (selected_resource_types.map(x => `<option value="` + x.id + `" ` + (x.id == resource_selected ? 'selected' : '') + `>` + x.name + `</option>`)) + `
                     `);
+                    
+                    // Trigger change
+                    $(currentTarget).closest('.resource').find('.resource-item').trigger('change');
                 });
 
                 // Evnet Listener for Resource Click
@@ -225,12 +346,13 @@
                     const resource_element = $(currentTarget).closest('.resource');                    
                     const price = parseFloat(resources.find(x => x.id == resource_element.find('.resource-item').val()).price);
                     const quantity = resource_element.find('.quantity').val();
+                    const rental_fee = resource_element.find('[name="rental_fee[]"]').val();
 
                     // Only update price if there is quantity
                     if (quantity) {
 
                         // Calculate new price with 2 decimal format
-                        const new_price = (parseFloat(price) * parseFloat(quantity)).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const new_price = ((parseFloat(price) * parseFloat(quantity)) + parseFloat(rental_fee ? rental_fee : 0)).toLocaleString(undefined, { minimumFractionDigits: 2 });
 
                         // Display to price and show
                         resource_element.find('.price span').text(new_price).closest('.price-div').show();
@@ -264,6 +386,9 @@
                         resource_element.find('.vehicle-details').hide();
                         resource_element.find('.btn-map').hide();
                     }
+
+                    resource_element.find('[name="rental_fee[]"]').val(parseInt(resource_selected.rental_fee));
+                    resource_element.find('.qty-label').text(resource_selected.measurement.charAt(0).toUpperCase() + resource_selected.measurement.slice(1));
                 });
 
 

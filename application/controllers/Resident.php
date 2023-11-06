@@ -19,7 +19,7 @@
             $this->form_validation->set_error_delimiters('', '');
             $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[100]');
-            $this->form_validation->set_rules('contact_num', 'Contact Number', 'trim|required|max_length[30]');
+            $this->form_validation->set_rules('contact_num', 'Contact Number', 'trim|required|min_length[11]|max_length[15]');
 
             // Run validation
             if ($this->form_validation->run()) {
@@ -59,7 +59,7 @@
             $this->form_validation->set_error_delimiters('', '');
             $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[100]');
-            $this->form_validation->set_rules('contact_num', 'Contact Number', 'trim|required|max_length[30]');
+            $this->form_validation->set_rules('contact_num', 'Contact Number', 'trim|required|min_length[11]|max_length[15]');
 
             // Run validation
             if ($this->form_validation->run()) {

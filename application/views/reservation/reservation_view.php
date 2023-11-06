@@ -42,7 +42,7 @@
                                 <div class="w-100">
                                     <button type="button" class="btn btn-primary btn-new">Add New Resource</button>
                                 </div>
-                                <button type="button" class="btn btn-success btn-submit float-right">Submit</button>
+                                <button type="submit" class="btn btn-success btn-submit float-right">Submit</button>
                             <?php echo form_close(); ?>
                         </div>
                     </div>
@@ -58,20 +58,35 @@
                         <p class="mb-0">Use the direction to find out how many kilometers it is from your starting point in the barangay to your destination</p>
                         
                         <!-- Map -->
-                        <div class="map my-3" style="height: 40vh">
+                        <div class="my-3" id="map" style="height: 40vh">
                             <img src="https://cdn.discordapp.com/attachments/1087225088069353572/1166763585939189812/image.png?ex=654bac44&is=65393744&hm=928eaaa66773f9a9fcd8610da63f3610dc5c55dde231232938ef339f1d611552&" alt="Google Map Image" class="img-fluid"/>
                         </div>
                         <!-- Map -->
 
                         <h4>Direction</h4>
                         <div class="form-group">
-                            <label>Starting Point</label>
-                            <input type="text" class="form-control"/>
+                            <label class="text-danger">Starting Point</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend w-25">
+                                    <input type="text" class="form-control" id="origin-input" placeholder="Search ..."/>
+                                </div>
+                                <select id="origin-output" class="form-control">
+                                    <option selected disabled>Enter location</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>Destination</label>
-                            <input type="text" class="form-control"/>
+                            <label class="text-success">Destination</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend w-25">
+                                    <input type="text" class="form-control" id="destination-input" placeholder="Search ..."/>
+                                </div>
+                                <select id="destination-output" class="form-control">
+                                    <option selected disabled>Enter location</option>
+                                </select>
+                            </div>
                         </div>
+                        <h4 class="distance" style="display: none">Distance: <span style="font-weight: 400">69</span><small>km</small></h4>
                     </div>
                 </aside>
                 <!-- Offcanvas -->
@@ -80,8 +95,150 @@
         </div>
     </div>
 
+	<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
     <script>
         $(document).ready(() => {
+
+            /**
+             * Map
+             */
+
+            class Map {
+
+				constructor() {
+
+					this.access_token = 'pk.eyJ1IjoicmFzaGVkMDkiLCJhIjoiY2xvbGEzdm43MjBtczJqbzExNms0ZjdueCJ9.aq4gxSM8lvD2KJLH7SdSLw';
+
+					// Access token
+					mapboxgl.accessToken = this.access_token;
+					
+					// Pardo LatLng
+					const pardo = new mapboxgl.LngLat(123.8604274375296, 10.274636914843141);
+
+					// Buhat map instance
+					this.map = new mapboxgl.Map({
+						container: 'map',
+						style: 'mapbox://styles/mapbox/streets-v12',
+						center: pardo,
+						zoom: 15
+					});
+
+					this.map.addControl(new mapboxgl.GeolocateControl());
+
+					this.session_token = '<?php echo strtolower(random_string('alpha', 8)); ?>';
+
+					// Marker sa pardo
+					this.origin_marker = new mapboxgl.Marker({
+						color: '#E03444',
+						draggable: true
+					}).setLngLat(pardo).addTo(this.map);
+
+					// Destination
+					this.destination_marker = new mapboxgl.Marker({
+						color: '#4BBF73',
+						draggable: true
+					});
+				}
+
+				set_search_output_element(input_element, output_element) {
+
+					let timeout;
+					
+					input_element.on('keyup', ({ currentTarget }) => {
+
+						clearTimeout(timeout);
+
+						// Update after 5 seconds
+						timeout = setTimeout(async () => {
+							output_element.prop('disabled', true);
+							await map.search(currentTarget.value, output_element);
+							output_element.prop('disabled', false);
+						}, 1000);
+					});
+				}
+
+				async search(query, output) {
+
+					output.append(`<option selected disabled>Searching ...</option>`);
+
+					query = encodeURIComponent(query);
+					
+					const search_endpoint = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&country=PH&access_token=${this.access_token}&session_token=${this.session_token}`;
+
+					await fetch(search_endpoint).then(response => response.json()).then(data => {
+						
+						// Nay sud ang suggestion
+						if (data.suggestions.length > 0) {
+
+							output.empty().append(`<option selected disabled>Select Location</option>`);
+
+							data.suggestions.map(suggestion => {
+								output.append(`
+									<option value="${suggestion.mapbox_id}">${[suggestion.name, suggestion.place_formatted].join(', ')}</option>
+								`);
+							});
+
+							output.unbind('change').change(async ({ currentTarget }) => {
+
+								const retrieve_endpoint = `https://api.mapbox.com/search/searchbox/v1/retrieve/${currentTarget.value}?access_token=${this.access_token}&session_token=${this.session_token}`;
+
+								await fetch(retrieve_endpoint).then(retrieve_response => retrieve_response.json()).then(retrieve_data => {
+
+									const [longitude, latitude] = retrieve_data.features[0].geometry.coordinates;
+									const coordinates = new mapboxgl.LngLat(longitude, latitude);
+
+									if (output.attr('id') == 'origin-output') {
+										this.origin_marker.setLngLat(coordinates);
+									}
+									else {
+										this.destination_marker.setLngLat(coordinates).addTo(this.map);
+									}
+
+									this.map.panTo(coordinates);
+									this.compute_distance();
+								}).catch((error) => console.error(error));
+							});
+						}
+						else {
+							throw new Error();
+						}
+					}).catch(() => output.empty().append(`<option selected disabled>No results found</option>`));
+				}
+
+				compute_distance() {
+					
+					const origin = this.origin_marker.getLngLat();
+					const destination = this.destination_marker.getLngLat();
+
+					// Check naa bay origin ug destination
+					if (!origin || !destination) {
+						return false;
+					}
+
+                    // Calculate the bounds to fit both markers
+                    const bounds = new mapboxgl.LngLatBounds().extend(origin).extend(destination);
+
+                    // Fit the map to the bounds
+                    this.map.fitBounds(bounds, { padding: 50 });
+
+                    const start = turf.point([origin.lng, origin.lat]);
+                    const end = turf.point([destination.lng, destination.lat]);
+                    const distance = turf.distance(start, end);
+
+                    // Display bag o distance
+                    $('.distance').show().find('span').text(distance.toFixed(1));
+				}
+			}
+			
+			// Set map instance
+			const map = new Map();
+
+			// Set origin mangita
+			map.set_search_output_element($('#origin-input'), $('#origin-output'));
+
+			// Set destination padung
+			map.set_search_output_element($('#destination-input'), $('#destination-output'));
 
             /**
              * Mga Mamuhatay
@@ -254,7 +411,7 @@
                             </div>
                             <div class="form-group col-md-6 vehicle-details" style="display: none">
                                 <label>Rental Fee</label>
-                                <input type="number" name="rental_fee[]" class="form-control" min="0" placeholder=""/>
+                                <input type="number" name="rental_fee[]" class="form-control watch-change" min="0" placeholder=""/>
                             </div>
                             <div class="form-group col-md-6 vehicle-details" style="display: none">
                                 <label>
@@ -318,11 +475,11 @@
                         ` + (selected_resource_types.map(x => `<option value="` + x.id + `">` + x.name + `</option>`)) + `
                     `);
 
+                    // Trigger change
+                    $(currentTarget).closest('.resource').find('.resource-item').trigger('change');
+
                     // Update Resource Label with uppercase first letter
                     $(currentTarget).closest('.resource').find('.resource-label').text(type_selected.charAt(0).toUpperCase() + type_selected.slice(1));
-
-                    // Update Resource Quantity Label with uppercase first letter
-                    $(currentTarget).closest('.resource').find('.qty-label').text(selected_resource_types[0].measurement.charAt(0).toUpperCase() + selected_resource_types[0].measurement.slice(1));
                 });
 
                 // Magbantay mapislit ang offcanvas
@@ -371,9 +528,10 @@
                         resource_element.find('.vehicle-details').hide();
                         resource_element.find('.btn-map').hide();
                     }
-
+                    
                     // Update Resource Quantity Label with uppercase first letter
-                    $(currentTarget).closest('.resource').find('.qty-label').text(resource_selected.measurement.charAt(0).toUpperCase() + resource_selected.measurement.slice(1));
+                    resource_element.find('[name="rental_fee[]"]').val(resource_selected.rental_fee);
+                    resource_element.find('.qty-label').text(resource_selected.measurement.charAt(0).toUpperCase() + resource_selected.measurement.slice(1));
                 });
 
                 // Event Listener for resource and quantity change
@@ -382,12 +540,13 @@
                     const resource_element = $(currentTarget).closest('.resource');                    
                     const price = parseFloat(resources.find(x => x.id == resource_element.find('.resource-item').val()).price);
                     const quantity = resource_element.find('.quantity').val();
+                    const rental_fee = resource_element.find('[name="rental_fee[]"]').val();
 
                     // Only update price if there is quantity
                     if (quantity) {
 
                         // Calculate new price with 2 decimal format
-                        const new_price = (parseFloat(price) * parseFloat(quantity)).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const new_price = ((parseFloat(price) * parseFloat(quantity)) + parseFloat(rental_fee ? rental_fee : 0)).toLocaleString(undefined, { minimumFractionDigits: 2 });
 
                         // Display to price and show
                         resource_element.find('.price span').text(new_price).closest('.price-div').show();
@@ -417,27 +576,96 @@
             });
 
             // Event Listener for submit
-            $('.btn-submit').click(() => {
+            $('.btn-submit').click((e) => {
 
-                // Show confirmation
-                Swal.fire({
-                    title: 'Confirm Reservation',
-                    text: 'Confirm that the provided information is accurate and requires no changes',
-                    showDenyButton: true,
-                    confirmButtonText: 'Confirm',
-                    confirmButtonColor: '#4bbf73',
-                    denyButtonText: 'Cancel',
-                    denyButtonColor: '#495057',
-                    reverseButtons: true
-                }).then((result) => {
-                    
-                    // Confirmed
-                    if (result.isConfirmed) {
+                // Tan awn ug ipasubmit ba
+                if (!$(e.currentTarget).attr('data-submit')) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Show confirmation
+                    Swal.fire({
+                        title: 'Confirm Reservation',
+                        text: 'Confirm that the provided information is accurate and requires no changes',
+                        showDenyButton: true,
+                        confirmButtonText: 'Confirm',
+                        confirmButtonColor: '#4bbf73',
+                        denyButtonText: 'Cancel',
+                        denyButtonColor: '#495057',
+                        reverseButtons: true
+                    }).then((result) => {
                         
-                        // Submit form
-                        $('form').trigger('submit');
+                        // Confirmed
+                        if (result.isConfirmed) {
+                            
+                            // Submit form
+                            $(e.currentTarget).attr('data-submit', true).trigger('click')
+                        }
+                    });
+                }
+            });
+
+            // Bantay nay mosubmit nga form
+            $('form').on('submit', (e) => {
+
+                // Dili isubmit
+                e.preventDefault();
+
+                // Disable ang nagsubmit
+                const submitter = $(e.originalEvent.submitter).prop('disabled', true);
+
+                // Get form data
+                $.ajax({
+                    url: e.target.action,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: $(e.target).serialize(),
+                    success: ({ status, message, redirect }) => {
+                        
+                        // Show message if there is
+                        if (message) {
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        }).fire({
+                            icon: message.type,
+                            title: message.message
+                        });
+                        }
+
+                        // Check if status is ok and redirect
+                        if (status && status == true) {
+                        window.location.replace(redirect);
+
+                        return true;
+                        }
+
+                        // Enable ang gasubmit
+                        submitter.prop('disabled', false);
+                    },
+                    error: () => {
+                        // Show error
+                            Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                            }).fire({
+                                icon: 'error',
+                                title: 'Something went wrong. Please try again later'
+                            });
+
+                        // Enable ang gasubmit
+                        submitter.prop('disabled', false);
                     }
                 });
+
+
+                // Dili isubmit
+                return false;
             });
 
             /**

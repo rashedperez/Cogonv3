@@ -25,6 +25,9 @@
 
                     // Get Data
                     $resource->data = $this->resource_model->get_resource_by_id($resource->resource_id);
+                    
+                    // Format Quantity
+                    $resource->formatted_quantity = format_short_quantity($resource->data->measurement, $resource->quantity);
 
                     return $resource;
 
@@ -68,9 +71,9 @@
             $this->form_validation->set_error_delimiters('', '');
             $this->form_validation->set_rules('resident', 'Resident', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('date_reserved', 'Date Reserved', 'trim|required|max_length[100]');
-            $this->form_validation->set_rules('resource', 'Resource', 'trim|required|max_length[100]');
-            $this->form_validation->set_rules('quantity', 'Quantity', 'trim|required|numeric|max_length[30]');
-            $this->form_validation->set_rules('purpose', 'Purpose', 'trim|required|numeric|max_length[100]');
+            $this->form_validation->set_rules('resource[]', 'Resource', 'trim|required|max_length[100]');
+            $this->form_validation->set_rules('quantity[]', 'Quantity', 'trim|required|numeric|max_length[30]');
+            $this->form_validation->set_rules('purpose[]', 'Purpose', 'trim|required|max_length[100]');
 
             // Additional validation for vehicles
             // Code here ...
@@ -103,6 +106,13 @@
                                 // Kwaon ang resource
                                 $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
 
+                                // Check if resource is a vehicle
+                                if ($current_resource->measurement == KILOMETER) {
+                                    if (empty($rental_fee[$i])) {
+                                        throw new Exception();
+                                    }
+                                }
+
                                 // Add reservation details
                                 $reservation_details = array(
                                     'reservation_id' => $reservation,
@@ -121,15 +131,18 @@
 
                             $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'Reserved Successfully']);
                             
-                            // Redirect to list of reservation
-                            redirect('reservation/list');
+                            $response = array(
+                                'status' => TRUE,
+                                'redirect' => base_url('reservation/list')
+                            );
                         }
                         // There is error
                         catch (\Throwable $th) {
-                            $this->session->set_flashdata('reservation_status', ['type' => 'error', 'message' => 'Failed To Reserve']);
 
-                            // Redirect to add reservation
-                            redirect('reservation/reservation_index');
+                            // Delete ang naadd nga reservation
+                            $this->reservation_model->delete_reservation($reservation);
+
+                            $response['message'] = ['type' => 'error', 'message' => 'Failed To Reserve'];
                         }
                     }
                 }
@@ -156,11 +169,26 @@
                             // Loop all reservation facilities
                             for ($i = 0; $i < count($resource); $i++) {
 
+                                // Kwaon ang resource
+                                $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
+
+                                // Check if resource is a vehicle
+                                if ($current_resource->measurement == KILOMETER) {
+                                    if (empty($rental_fee[$i])) {
+                                        throw new Exception();
+                                    }
+                                }
+
                                 // Add reservation details
                                 $reservation_details = array(
                                     'reservation_id' => $id,
                                     'resource_id' => $resource[$i],
-                                    'quantity' => $quantity[$i]
+                                    'quantity' => $quantity[$i],
+                                    'rental_fee' => $current_resource->measurement == KILOMETER ? $rental_fee[$i] : NULL,
+                                    'has_driver' => !empty($has_driver[$i]) ? TRUE : FALSE,
+                                    'driver' => $current_resource->measurement == KILOMETER ? $driver[$i] : NULL,
+                                    'purpose' => $purpose[$i],
+                                    'purpose_specific' => $others[$i]
                                 );
 
                                 // Update existing if less
@@ -183,15 +211,14 @@
 
                             $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'Reservation Updated']);
                             
-                            // Redirect to list of reservation
-                            redirect('reservation/list');
+                            $response = array(
+                                'status' => TRUE,
+                                'redirect' => base_url('reservation/list')
+                            );
                         }
                         // There is error
                         catch (\Throwable $th) {
-                            $this->session->set_flashdata('reservation_status', ['type' => 'error', 'message' => 'Failed To Update Reservation']);
-
-                            // Redirect to add reservation
-                            redirect('reservation/reservation_index');
+                            $response['message'] = ['type' => 'error', 'message' => 'Failed To Update Reservation'];
                         }
                     }
                 }

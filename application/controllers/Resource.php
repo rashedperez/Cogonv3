@@ -27,11 +27,19 @@
             // Run validation
             if ($this->form_validation->run()) {
 
+                // Check rental fee if kilometer
+                if ($this->input->post('per') == KILOMETER) {
+                    if ($this->input->post('rental_fee') == NULL) {
+                        echo json_encode(['type' => 'error', 'message' => 'Rental Fee field is required.']);
+                    }
+                }
+
                 $data = array(
                     'type' => $this->input->post('type'),
                     'name' => $this->input->post('name'),
                     'measurement' => $this->input->post('per'),
                     'price' => $this->input->post('price'),
+                    'rental_fee' => $this->input->post('rental_fee'),
                     'quantity' => $this->input->post('quantity'),
                     'description'=> $this->input->post('description')
                 );
@@ -78,6 +86,7 @@
                     'name' => $this->input->post('name'),
                     'measurement' => $this->input->post('per'),
                     'price' => $this->input->post('price'),
+                    'rental_fee' => $this->input->post('rental_fee'),
                     'quantity' => $this->input->post('quantity'),
                     'description'=> $this->input->post('description')
                 );
