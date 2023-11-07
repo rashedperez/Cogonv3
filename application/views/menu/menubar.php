@@ -107,6 +107,12 @@
 							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Rented Resources</span>
 						</a>
 					</li>
+					<!-- Notify Resident SideBar-->
+					<li class="sidebar-item">
+						<a href="<?php echo base_url('resident/notify');?>" class="sidebar-link collapsed text-white">
+							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Notify Resident</span>
+						</a>
+					</li>
 				</ul>
 			</div>
 		</nav>

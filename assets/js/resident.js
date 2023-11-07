@@ -19,6 +19,29 @@ $('form').on('submit', (e) => {
   // Dili isubmit
   e.preventDefault();
 
+  const number_input = $(e.target).find('[name="contact_num"]');
+  const phone = libphonenumber.parsePhoneNumber(number_input.val(), 'PH');
+
+  // Check ug valid ba ang phone
+  if (!phone.isValid()) {
+
+    // Prompt Error
+    window.notyf.open({
+      type: 'error',
+      message: 'Invalid mobile number',
+      duration: 3000,
+      position: {
+        x: 'center',
+        y: 'top'
+      }
+    });
+
+    return false;
+  }
+
+  // Assign ang contact number sa sakto nga format
+  number_input.val(phone.number);
+
   // Disable ang nagsubmit
   const submitter = $(e.originalEvent.submitter).prop('disabled', true);
 

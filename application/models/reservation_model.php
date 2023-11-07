@@ -118,19 +118,19 @@
             return $result;
         }
 
-        // Get Today's Reservation
-        public function get_todays_reservations()
+        // Get Confirmed Reservation
+        public function get_confirmed_reservations()
         {
-            $this->db->where('DATE_FORMAT(date_reserved, "%Y-%m-%d") =', date('Y-m-d'));
+            $this->db->where('status', CONFIRMED);
             $query = $this->db->get('reservation');
 
             return $query->result();
         }
 
-        // Get Upcoming Reservation
-        public function get_upcoming_reservations()
+        // Get Pending Reservation
+        public function get_pending_reservations()
         {
-            $this->db->where('DATE_FORMAT(date_reserved, "%Y-%m-%d") >', date('Y-m-d'));
+            $this->db->where('status', PENDING);
             $query = $this->db->get('reservation');
 
             return $query->result();

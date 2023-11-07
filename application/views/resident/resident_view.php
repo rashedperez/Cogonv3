@@ -59,6 +59,9 @@
 	</div>
 	<?php include('application\views\menu\resident_modal.php'); ?>
 	<script src="<?php echo base_url('assets/js/resident.js');?>"></script>
+
+	<!-- Phone Number JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.49/libphonenumber-js.min.js"></script>
 	  
 	<script>
 		// Notifications

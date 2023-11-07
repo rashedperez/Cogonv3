@@ -106,5 +106,12 @@
             
             redirect('resident/resident_index');
         }
+
+        // Notify Resident View
+        public function notify() {
+            
+            $this->load->view('menu/menubar');
+            $this->load->view('resident/notify');
+        }
     }
 ?>

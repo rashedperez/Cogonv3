@@ -151,7 +151,7 @@
                             <div class="form-group col-md-3 partial-hidden" style="display: none">
                                 <label class="qty-label">Quantity</label>
                                 <div class="input-group">
-                                    <input type="number" name="quantity[]" class="form-control watch-change quantity" min="0" placeholder=""/>
+                                    <input type="number" name="quantity[]" class="form-control watch-change quantity" min="0" placeholder="" oninput="validity.valid||(value='')"/>
                                     <button type="button"
                                         class="btn btn-primary btn-map text-white"
                                         data-toggle="offcanvas"
@@ -164,7 +164,7 @@
                             </div>
                             <div class="form-group col-md-6 vehicle-details" style="display: none">
                                 <label>Rental Fee</label>
-                                <input type="number" name="rental_fee[]" class="form-control watch-change" min="0" placeholder=""/>
+                                <input type="number" name="rental_fee[]" class="form-control watch-change" min="0" placeholder="" oninput="validity.valid||(value='')"/>
                             </div>
                             <div class="form-group col-md-6 vehicle-details" style="display: none">
                                 <label>
@@ -173,7 +173,7 @@
                                         <label class="form-check-label">I have a driver</label>
                                     </div>
                                 </label>
-                                <input type="number" class="form-control" name="driver_name[]" placeholder="Driver Service Fee"/>
+                                <input type="number" class="form-control watch-change" name="driver_name[]" min="0" placeholder="Driver Service Fee" oninput="validity.valid||(value='')"/>
                             </div>
                             <div class="form-group col-md-6 partial-hidden" style="display: none">
                                 <label class="purpose-label">Purpose</label>
@@ -192,6 +192,7 @@
                         </div>
                         <div class="price-div" style="display: none">
                             <b>Price:</b><span class="price ml-2">₱<span>Price</span></span>
+                            <input type="hidden" name="price[]"/>
                         </div>
                     </div>
                 `);
@@ -345,18 +346,35 @@
 
                     const resource_element = $(currentTarget).closest('.resource');                    
                     const price = parseFloat(resources.find(x => x.id == resource_element.find('.resource-item').val()).price);
-                    const quantity = resource_element.find('.quantity').val();
+                    const quantity = parseFloat(resource_element.find('.quantity').val());
                     const rental_fee = resource_element.find('[name="rental_fee[]"]').val();
+                    const driver_fee = parseFloat(resource_element.find('[name="driver_name[]"]').val());
 
                     // Only update price if there is quantity
                     if (quantity) {
 
+                        // Mga extra bayronon
+                        const extras = (rental_fee ? parseFloat(rental_fee) : 0) + (Number.isInteger(driver_fee) ? driver_fee : 0);
+
                         // Calculate new price with 2 decimal format
-                        const new_price = ((parseFloat(price) * parseFloat(quantity)) + parseFloat(rental_fee ? rental_fee : 0)).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const new_price = ((price * quantity) + extras).toLocaleString(undefined, { minimumFractionDigits: 2 });
 
                         // Display to price and show
                         resource_element.find('.price span').text(new_price).closest('.price-div').show();
+
+                        // Update price hidden input
+                        resource_element.find('[name="price[]"]').val((price * quantity) + extras);
                     }
+                });
+
+                // Bantay iclick ang nay driver
+                $('[name="has_driver[]"]').unbind('click').click(() => {
+
+                    // Trigger change
+                    $('.watch-change').trigger('change');
+
+                    // Empty driver fee input
+                    $(currentTarget).closest('.resource').find('[name="driver_name[]"]').val('');
                 });
 
                 // Minaw mausab ang resource-item
@@ -386,8 +404,11 @@
                         resource_element.find('.vehicle-details').hide();
                         resource_element.find('.btn-map').hide();
                     }
-
-                    resource_element.find('[name="rental_fee[]"]').val(parseInt(resource_selected.rental_fee));
+                    
+                    // Update Resource Quantity Label with uppercase first letter
+                    if (!resource_element.find('[name="rental_fee[]"]').val()) {
+                        resource_element.find('[name="rental_fee[]"]').val(resource_selected.rental_fee);
+                    }
                     resource_element.find('.qty-label').text(resource_selected.measurement.charAt(0).toUpperCase() + resource_selected.measurement.slice(1));
                 });
 

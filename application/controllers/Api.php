@@ -24,32 +24,21 @@ class Api extends CI_Controller {
                 throw new Exception('No mobile number specified');
             }
 
-            $ch = curl_init();
+            // Generate OTP
+            $code = random_string('numeric', 4);
+                
+            // Send SMS
+            $send_attempt = $this->sms->send($mobile_number, "Hello, your OTP for verification is: $code. Please use it to confirm your reservation. Thank you, Barangay Cogon Pardo");
 
-            $parameters = array(
-                'apikey' => 'API Key',
-                'number' => $to,
-                'message' => $message
-            );
-
-            curl_setopt($ch, CURLOPT_URL,'https://semaphore.co/api/v4/messages');
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-
-            $output = curl_exec($ch);
-
-            curl_close ($ch);
-            
-            // Failed to send sms
-            if (!$output) {
+            // Send failed
+            if (!$send_attempt) {
                 throw new Exception('Failed to send SMS. Please try again later');
             }
 
             // Generate OTP
             $response = array(
                 'status' => TRUE,
-                'otp' => random_string('numeric', 4)
+                'otp' => $code
             );
         }
         catch (Exception $e) {
@@ -59,4 +48,41 @@ class Api extends CI_Controller {
         echo json_encode($response);
     }
 
+    // Notify sa tanan resident
+    public function notify_resident() {
+
+        try {
+
+            // Get message
+            $message = trim($this->input->post('message'));
+
+            // Tan awn ug naa ba number
+            if (!$message) {
+                throw new Exception('Please specify your message');
+            }
+
+            // Check if message reached max
+            if (strlen($message) > 150) {
+                throw new Exception('Message is too long');
+            }
+
+            // Get all residents
+            $residents = $this->resident_model->get_all_resident();
+
+            // Iterate residents
+            foreach ($residents as $resident) {
+                $this->sms->send($resident->contact_num, $message);
+            }
+
+            $response = array(
+                'status' => TRUE,
+                'message' => 'Residents notified!'
+            );
+        }
+        catch (Exception $e) {
+            $response['message'] = $e->getMessage();
+        }
+
+        echo json_encode($response);
+    }
 }

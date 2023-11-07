@@ -50,7 +50,7 @@
                               'name' => 'contact_num',
                               'placeholder' => 'Enter Contact Number',
                               'required' => 'required',
-                              'type' => 'number'
+                              'type' => 'text'
                             );
                             echo form_input($resident_qty_attr);
                           ?>
@@ -125,7 +125,7 @@
                               'name' => 'contact_num',
                               'placeholder' => 'Enter Contact Number',
                               'required' => 'required',
-                              'type' => 'number'
+                              'type' => 'text'
                             );
                             echo form_input($updateresident_qty_attr);
                           ?>

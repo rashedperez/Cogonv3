@@ -15,8 +15,8 @@
 								<div class="card-body py-4">
 									<div class="media">
 										<div class="media-body">
-											<h3 class="mb-2"><?php echo count($todays); ?></h3>
-											<p class="mb-2">Today's Reservation</p>
+											<h3 class="mb-2"><?php echo count($confirmed); ?></h3>
+											<p class="mb-2">Confirmed Reservations</p>
 										</div>
 										<div class="d-inline-block ml-3">
 											<div class="stat">
@@ -32,8 +32,8 @@
 								<div class="card-body py-4">
 									<div class="media">
 										<div class="media-body">
-											<h3 class="mb-2"><?php echo count($upcoming); ?></h3>
-											<p class="mb-2">Upcoming Reservation</p>
+											<h3 class="mb-2"><?php echo count($pending); ?></h3>
+											<p class="mb-2">Pending Reservations</p>
 										</div>
 										<div class="d-inline-block ml-3">
 											<div class="stat text-success">

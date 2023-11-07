@@ -100,6 +100,9 @@
     </div>
 	<?php include('application\views\reservation\modals.php'); ?>
 	<script src="<?php echo base_url('assets/js/reservation.js');?>"></script>
+
+    <!-- HTML2PDF JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
 	
 	<script>
 		// Notifications

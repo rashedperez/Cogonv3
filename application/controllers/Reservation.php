@@ -274,6 +274,17 @@
                 $this->resource_model->decrement($resource->resource_id, $resource->quantity);
             }
 
+            // Get reservation
+            $reservation = $this->reservation_model->get_reservation($id);
+
+            // SMS Data
+            $reserver = $this->resident_model->get_resident_by_id($reservation->Res_id)->name;
+            $date_reserved = date('M d, Y - ga', $reservation->date_reserved);
+            $reference_number = format_reference_number($id);
+
+            // Send SMS
+            $this->sms->send($mobile_number, "Reservation confirmed for $reserver at Barangay Cogon Pardo. Date & Time: $date_reserved. Ref: $reference_number");
+
             // Show success message
             $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'The confirmed booking will be appear in the Rented Resources List']);
 

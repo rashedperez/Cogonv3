@@ -1,6 +1,6 @@
 <!--Begin Reservation Info Modal-->
 <div class="modal fade" id="reservationinfo" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered to-print" role="document">
     <div class="modal-content">
       <div class="modal-header border-0 pb-0">
         <h3 class="modal-title mx-auto">Reservation Information</h3>
