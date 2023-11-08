@@ -420,7 +420,7 @@
                                         <label class="form-check-label">I have a driver</label>
                                     </div>
                                 </label>
-                                <input type="number" class="form-control" name="driver_name[]" min="0" placeholder="Driver Service Fee" oninput="validity.valid||(value='')"/>
+                                <input type="number" class="form-control watch-change" name="driver_name[]" min="0" placeholder="Driver Service Fee" oninput="validity.valid||(value='')"/>
                             </div>
                             <div class="form-group col-md-6 partial-hidden" style="display: none">
                                 <label class="purpose-label">Purpose</label>
@@ -567,11 +567,11 @@
                 // Bantay iclick ang nay driver
                 $('[name="has_driver[]"]').unbind('click').click(({ currentTarget }) => {
 
-                    // Trigger change
-                    $('.watch-change').trigger('change');
-
                     // Empty driver fee input
                     $(currentTarget).closest('.resource').find('[name="driver_name[]"]').val('');
+
+                    // Trigger change
+                    $('.watch-change').trigger('change');
                 });
 
                 // Event Listener for remove

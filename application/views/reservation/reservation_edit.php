@@ -58,7 +58,7 @@
                                             </div>
                                             <div class="form-group col-md-6 vehicle-details" <?php echo $resource->data->measurement == KILOMETER ? '' : 'style="display: none"'; ?>>
                                                 <label>Rental Fee</label>
-                                                <input type="number" name="rental_fee[]" class="form-control" min="0" placeholder="" value="<?php echo $resource->rental_fee; ?>"/>
+                                                <input type="number" name="rental_fee[]" class="form-control watch-change" min="0" placeholder="" value="<?php echo $resource->rental_fee; ?>"/>
                                             </div>
                                             <div class="form-group col-md-6 vehicle-details" <?php echo $resource->data->measurement == KILOMETER ? '' : 'style="display: none"'; ?>>
                                                 <label>
@@ -67,7 +67,7 @@
                                                         <label class="form-check-label">I have a driver</label>
                                                     </div>
                                                 </label>
-                                                <input type="<?php echo $resource->has_driver ? 'text' : 'number'; ?>" class="form-control" name="driver_name[]" placeholder="<?php echo $resource->has_driver ? 'Enter Driver\'s Name' : 'Driver Service Fee'; ?>" value="<?php echo $resource->driver; ?>"/>
+                                                <input type="<?php echo $resource->has_driver ? 'text' : 'number'; ?>" class="form-control watch-change" name="driver_name[]" placeholder="<?php echo $resource->has_driver ? 'Enter Driver\'s Name' : 'Driver Service Fee'; ?>" value="<?php echo $resource->driver; ?>"/>
                                             </div>
                                             <div class="form-group col-md-6 partial-hidden">
                                                 <label class="purpose-label">Purpose</label>
@@ -85,7 +85,7 @@
                                             </div>
                                         </div>
                                         <div class="price-div">
-                                            <b>Price:</b><span class="price ml-2">₱<span><?php echo number_format($resource->data->price * $resource->quantity, 2); ?></span></span>
+                                            <b>Price:</b><span class="price ml-2">₱<span><?php echo number_format(($resource->data->price * $resource->quantity) + ($resource->rental_fee ? (float) $resource->rental_fee : 0) + (!$resource->has_driver ? (float) $resource->driver : 0), 2); ?></span></span>
                                         </div>
                                     </div>
                                     <?php endforeach ?>
@@ -348,13 +348,14 @@
                     const price = parseFloat(resources.find(x => x.id == resource_element.find('.resource-item').val()).price);
                     const quantity = parseFloat(resource_element.find('.quantity').val());
                     const rental_fee = resource_element.find('[name="rental_fee[]"]').val();
+                    const has_driver = resource_element.find('[name="has_driver[]"]').is(':checked');
                     const driver_fee = parseFloat(resource_element.find('[name="driver_name[]"]').val());
 
                     // Only update price if there is quantity
                     if (quantity) {
 
                         // Mga extra bayronon
-                        const extras = (rental_fee ? parseFloat(rental_fee) : 0) + (Number.isInteger(driver_fee) ? driver_fee : 0);
+                        const extras = (rental_fee ? parseFloat(rental_fee) : 0) + (Number.isInteger(driver_fee) && !has_driver ? driver_fee : 0);
 
                         // Calculate new price with 2 decimal format
                         const new_price = ((price * quantity) + extras).toLocaleString(undefined, { minimumFractionDigits: 2 });
@@ -368,13 +369,13 @@
                 });
 
                 // Bantay iclick ang nay driver
-                $('[name="has_driver[]"]').unbind('click').click(() => {
-
-                    // Trigger change
-                    $('.watch-change').trigger('change');
+                $('[name="has_driver[]"]').unbind('click').click(({ currentTarget }) => {
 
                     // Empty driver fee input
                     $(currentTarget).closest('.resource').find('[name="driver_name[]"]').val('');
+
+                    // Trigger change
+                    $('.watch-change').trigger('change');
                 });
 
                 // Minaw mausab ang resource-item
