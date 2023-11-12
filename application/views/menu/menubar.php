@@ -113,12 +113,14 @@
 							<i class="align-middle text-white" data-feather="bell"></i> <span class="align-middle">Notify Resident</span>
 						</a>
 					</li>
+					<?php if ($this->session->userdata('role') == ADMIN): ?>
 					<!-- User Set-up SideBar -->
 					<li class="sidebar-item">
 						<a href="<?php echo base_url('user/setup');?>" class="sidebar-link collapsed text-white">
 							<i class="align-middle text-white" data-feather="user-plus"></i> <span class="align-middle">User Set-up</span>
 						</a>
 					</li>
+					<?php endif ?>
 				</ul>
 			</div>
 		</nav>
