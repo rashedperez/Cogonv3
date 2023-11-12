@@ -56,6 +56,18 @@
 
             return $update_result;
         }
+
+        // Increment resource
+        public function increment($id, $quantity) {
+
+            // Get resource
+            $resource = $this->get_resource_by_id($id);
+
+            // Update new quantity
+            $update_result = $this->update_resource($id, ['quantity' => (int) $resource->quantity + (int) $quantity]);
+
+            return $update_result;
+        }
         
     }
 ?>

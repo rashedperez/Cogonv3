@@ -2,6 +2,11 @@
     class Resident extends CI_Controller{
         public function __construct() {
             parent::__construct();
+
+            // Check ug naka login
+            if (!$this->user_model->is_logged_in()) {
+                redirect();
+            }
         }
         
         public function resident_index() {

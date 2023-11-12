@@ -76,19 +76,19 @@
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
 						<a href="<?php echo base_url('dashboard/index');?>" class="sidebar-link">
-							<i class="align-middle text-white" data-feather="sliders"></i> <span class="align-middle text-white">Dashboard</span>
+							<i class="align-middle text-white" data-feather="layers"></i> <span class="align-middle text-white">Dashboard</span>
 						</a>
 					</li>
 					<!-- Resources SideBar -->
 					<li class="sidebar-item">
 						<a href="<?php echo base_url('resource/resource_index');?>"  class="sidebar-link collapsed text-white">
-							<i class="align-middle text-white" data-feather="layout"></i> <span class="align-middle text-white">Resources</span>
+							<i class="align-middle text-white" data-feather="package"></i> <span class="align-middle text-white">Resources</span>
 						</a>
 					</li>
 					<!-- Resident SideBar-->
 					<li class="sidebar-item">
 						<a href="<?php echo base_url('resident/resident_index');?>" class="sidebar-link collapsed text-white">
-							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Residents</span>
+							<i class="align-middle text-white" data-feather="user"></i> <span class="align-middle">Residents</span>
 						</a>
 					</li>
 					<!-- Reservation SideBar-->
@@ -104,13 +104,19 @@
 					<!-- Rented Resources SideBar-->
 					<li class="sidebar-item">
 						<a href="<?php echo base_url('resource/rented');?>" class="sidebar-link collapsed text-white">
-							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Rented Resources</span>
+							<i class="align-middle text-white" data-feather="check-square"></i> <span class="align-middle">Rented Resources</span>
 						</a>
 					</li>
 					<!-- Notify Resident SideBar-->
 					<li class="sidebar-item">
 						<a href="<?php echo base_url('resident/notify');?>" class="sidebar-link collapsed text-white">
-							<i class="align-middle text-white" data-feather="users"></i> <span class="align-middle">Notify Resident</span>
+							<i class="align-middle text-white" data-feather="bell"></i> <span class="align-middle">Notify Resident</span>
+						</a>
+					</li>
+					<!-- User Set-up SideBar -->
+					<li class="sidebar-item">
+						<a href="<?php echo base_url('user/setup');?>" class="sidebar-link collapsed text-white">
+							<i class="align-middle text-white" data-feather="user-plus"></i> <span class="align-middle">User Set-up</span>
 						</a>
 					</li>
 				</ul>
@@ -140,11 +146,10 @@
 								<i class="align-middle" data-feather="settings"></i>
 							</a>
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
-								<span style="color: #495057"><i class="mr-1" data-feather="user" style="color: #495057"></i>Rashed Perez</span>
+								<span style="color: #495057"><i class="mr-1" data-feather="user" style="color: #495057"></i><?php echo $this->session->userdata('name'); ?></span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a class="dropdown-item" href="#"><i class="mr-3" data-feather="help-circle" style="color: #495057"></i>Help</a>
-								<a class="dropdown-item" href="#"><i class="mr-3" data-feather="log-out" style="color: #495057"></i>Sign out</a>
+								<a class="dropdown-item" href="<?php echo base_url('user/logout'); ?>"><i class="mr-3" data-feather="log-out" style="color: #495057"></i>Sign out</a>
 							</div>
 						</li>
 					</ul>

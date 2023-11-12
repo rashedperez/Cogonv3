@@ -63,9 +63,15 @@
                                                 <td class="text-center"><?php echo $reservation->reserver; ?></td>
                                                 <td class="text-center"><?php echo date('F j, Y - g:i A', strtotime($reservation->date_reserved)); ?></td>
                                                 <td class="text-center">
-                                                    <div class="d-flex">
-                                                        <?php $is_cancelled = $reservation->status == CANCELLED; ?>
-                                                        <button class="btn btn-outline-danger btn-sm btn-cancel" data-data="<?php echo $reservation->id; ?>" style="font-weight: 500" <?php echo $is_cancelled ? 'disabled' : ''; ?>><?php echo $is_cancelled ? 'Cancelled' : 'Cancel Reservation'; ?></button>
+                                                    <div class="d-flex align-items-center">
+                                                        <?php if ($reservation->status == CONFIRMED): ?>
+                                                        <button class="btn btn-outline-success btn-sm btn-return mr-1" data-data="<?php echo $reservation->id; ?>" style="font-weight: 500">Confirm Returned</button>
+                                                        <button class="btn btn-outline-danger btn-sm btn-cancel" data-data="<?php echo $reservation->id; ?>" style="font-weight: 500">Cancel Reservation</button>
+                                                        <?php elseif ($reservation->status == CANCELLED): ?>
+                                                        <button class="btn btn-outline-danger btn-sm" style="font-weight: 500" disabled>Cancelled</button>
+                                                        <?php elseif ($reservation->status == RETURNED): ?>
+                                                        <b class="text-success">Confirm Returned</b>
+                                                        <?php endif ?>
                                                         <!-- Dropleft (Muabli sa wala ig click sa naay data-toggle="dropdown") -->
                                                         <div class="dropleft">
                                                             <!-- Three Dots Button-->

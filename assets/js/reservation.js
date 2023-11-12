@@ -92,7 +92,7 @@ $('.btn-cancel').click(({ currentTarget }) => {
     text: 'This action cannot be undone',
     showDenyButton: true,
     confirmButtonText: 'Proceed',
-    confirmButtonColor: '#E03444',
+    confirmButtonColor: '#4BBF73',
     denyButtonText: 'Close',
     denyButtonColor: '#495057',
     reverseButtons: true
@@ -122,4 +122,27 @@ $('.print').click(({ currentTarget }) => {
     window.print();
     document.body.innerHTML = original_content;
   }, 500);
+});
+
+// Bantay iclick ang return
+$('.btn-return').click(( { currentTarget }) => {
+  // Show confirmation
+  Swal.fire({
+    title: 'Are you sure you want to return this reservation\'s resources?',
+    text: 'Proceed to return',
+    showDenyButton: true,
+    confirmButtonText: 'Proceed',
+    confirmButtonColor: '#E03444',
+    denyButtonText: 'Close',
+    denyButtonColor: '#495057',
+    reverseButtons: true
+  }).then((result) => {
+      
+    // Confirmed
+    if (result.isConfirmed) {
+        
+        // Delete
+        window.location = '../reservation/return/' + $(currentTarget).data('data');
+    }
+  });
 });

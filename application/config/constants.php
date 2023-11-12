@@ -106,3 +106,12 @@ define('QUANTITY', 'quantity');
 define('PENDING', 'pending');
 define('CONFIRMED', 'confirmed');
 define('CANCELLED', 'cancelled');
+define('RETURNED', 'returned');
+
+// User Roles
+define('ADMIN', 'admin');
+define('STAFF', 'staff');
+
+// User Status
+define('ACTIVE', 'active');
+define('INACTIVE', 'inactive');

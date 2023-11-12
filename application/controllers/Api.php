@@ -28,17 +28,53 @@ class Api extends CI_Controller {
             $code = random_string('numeric', 4);
                 
             // Send SMS
-            $send_attempt = $this->sms->send($mobile_number, "Hello, your OTP for verification is: $code. Please use it to confirm your reservation. Thank you, Barangay Cogon Pardo");
+            $send_attempt = $this->sms->send($mobile_number, "Hi, your verification OTP is $code. Please share this code with the Barangay Administrator at Cogon Pardo. Thanks!");
 
             // Send failed
             if (!$send_attempt) {
                 throw new Exception('Failed to send SMS. Please try again later');
             }
 
+            // Set code
+            $this->session->set_tempdata('verification_code', $code, 200);
+
             // Generate OTP
             $response = array(
                 'status' => TRUE,
                 'otp' => $code
+            );
+        }
+        catch (Exception $e) {
+            $response['message'] = $e->getMessage();
+        }
+
+        echo json_encode($response);
+    }
+
+    // Verify OTP
+    public function verify_otp() {
+
+        try {
+
+            // Input
+            $input = $this->input->post('code');
+
+            // Tan awn ug naa ba number
+            if (!$input) {
+                throw new Exception('Please enter code');
+            }
+
+            // Generate OTP
+            $code = $this->session->userdata('verification_code');
+
+            if ($input !== $code) {
+                throw new Exception('Invalid code');
+            }
+
+            // Generate OTP
+            $response = array(
+                'status' => TRUE,
+                'message' => 'Verified'
             );
         }
         catch (Exception $e) {

@@ -18,10 +18,12 @@ $('form').on('submit', (e) => {
 
   // Dili isubmit
   e.preventDefault();
+
+  let number_input, phone;
   
   try {
-    const number_input = $(e.target).find('[name="contact_num"]');
-    const phone = libphonenumber.parsePhoneNumber(number_input.val(), 'PH');
+    number_input = $(e.target).find('[name="contact_num"]');
+    phone = libphonenumber.parsePhoneNumber(number_input.val(), 'PH');
   
     // Check ug valid ba ang phone
     if (!phone.isValid()) {

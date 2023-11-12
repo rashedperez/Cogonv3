@@ -3,6 +3,11 @@
 
         public function __construct() {
             parent::__construct();
+
+            // Check ug naka login
+            if (!$this->user_model->is_logged_in()) {
+                redirect();
+            }
         }
 
         // Reservation list
@@ -308,6 +313,37 @@
 
             // Show success message
             $this->session->set_flashdata('resource_status', ['type' => 'success', 'message' => 'The reservation has been cancelled']);
+
+            redirect('resource/rented');
+        }
+
+        // Return Reservation
+        public function return($id) {
+
+            // Get Reservation Resources
+            $resources = $this->reservation_model->get_reservation_details($id);
+
+            // Update Resources Quantity
+            foreach ($resources as $resource) {
+
+                // Decrement resource quantity
+                $this->resource_model->increment($resource->resource_id, $resource->quantity);
+            }
+
+            // Return attempt
+            $return_result = $this->reservation_model->update_reservation($id, array('status' => RETURNED));
+
+            // Check if cancelled
+            if (!$return_result) {
+
+                // Show error message
+                $this->session->set_flashdata('reservation_status', ['type' => 'error', 'message' => 'Failed To Return Reservation']);
+
+                redirect('resource/rented');
+            }
+
+            // Show success message
+            $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'The reservation\'s resources has been returned']);
 
             redirect('resource/rented');
         }

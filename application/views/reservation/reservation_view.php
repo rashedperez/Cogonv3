@@ -5,9 +5,10 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
+                            <?php $current_reservation_id = format_reservation_id($latest_reservation ? $latest_reservation->id : 1); ?>
                             <div>
                                 <h5 class="card-title">Add Reservation</h5>
-                                <b>Reservation ID<span class="ml-3"><?php echo format_reservation_id($latest_reservation ? $latest_reservation->id : 1); ?></span></b>
+                                <b>Reservation ID<span class="ml-3"><?php echo $current_reservation_id; ?></span></b>
                             </div>
                             <b>Date of Reservation: <span class="ml-2"><?php echo date('F j, Y'); ?></span></b>
                         </div>
@@ -22,11 +23,18 @@
                                             <option value="<?php echo $resident->id; ?>"><?php echo $resident->name; ?></option>
                                             <?php endforeach ?>
                                         </select>
-                                        <div class="contact-detail mt-3" style="display: none">
+                                    </div>
+                                    <div class="form-group col-md-12 my-0">
+                                        <div class="contact-detail mb-3" style="display: none">
                                             <div class="d-flex align-items-center">
                                                 <p class="mb-0" style="font-weight: 500">Contact Number: <span>09123456789</span></p>
                                                 <div class="spinner-border spinner-border-sm text-secondary ml-3" role="status" style="display: none"></div>
                                                 <a href="#" id="generate-otp" class="btn-link text-success ml-3" style="font-weight: bold">Send Code</a>
+                                                <div class="input-group w-auto ml-3" style="display: none">
+                                                    <input type="text" class="form-control form-control-sm" id="otp-input" style="width: 225px"/>
+                                                    <button type="button" class="btn btn-success btn-sm btn-verify">Verify</button>
+                                                </div>
+                                                <div class="ml-3 text-success" id="otp-verified" style="display: none">verified number</div>
                                                 <button type="button" class="btn btn-transparent p-0 ml-3 disabled resend" style="display: none">resend after <span>200s</span></button>
                                             </div>
                                         </div>
@@ -244,6 +252,9 @@
              * Mga Mamuhatay
              */
 
+            // Hawanan ang session
+            sessionStorage.clear();
+
             // Set Flatpickr Instance
             $('.flatpickr').flatpickr({
                 enableTime: true,
@@ -312,6 +323,9 @@
                         // Taguon ang send code button, ipakita ang resend
                         $('.resend').show();
 
+                        // Ipakita and otp input
+                        $('#otp-input').closest('div').show();
+
                         // Start ang countdown makasend otp balik
                         start_countdown(200, $('.contact-detail').find('button span').get(0), () => {
 
@@ -320,12 +334,15 @@
 
                             // Ipakita ang send code button, tagoun ang resend
                             $('.resend').hide();
+
+                            // Pakita ang otp input
+                            $('#otp-input').closest('div').hide();
                         })
 
                         // Inotify unsa ang OTP
                         Swal.mixin({
                             toast: true,
-                            position: 'top',
+                            position: 'top-right',
                             showConfirmButton: false,
                             showCloseButton: true,
                         }).fire({
@@ -371,8 +388,146 @@
                 });
             });
 
+            // Magbantay pisliton ang otp
+            $('.btn-verify').click(() => {
+                
+                const input = $('#otp-input').val();
+
+                try {
+                    // Tan awn ug naa ba input
+                    if (!input) {
+                        throw 'Please enter code'
+                    };
+                }
+                catch (error) {
+                    // Prompt Error
+                    window.notyf.open({
+                        type: 'error',
+                        message: error,
+                        duration: 3000,
+                        position: {
+                            x: 'center',
+                            y: 'top'
+                        }
+                    });
+
+                    return false;
+                }
+
+                // Taguon ang input
+                $('.btn-verify').closest('div').hide();
+
+                // Ipakita ang spinner, taguon ang resend
+                $('.spinner-border, .resend').toggle();
+
+                // Padaganon ang Api Controller kay iverify ang otp
+                $.ajax({
+                    url: '../api/verify_otp',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {  make_request: true, code: input }
+                })
+                .done(({ status, message }) => {
+
+                    // Taguon ang spinner
+                    $('.spinner-border').hide();
+
+                    // Tanawn ug ok ba ang status
+                    if (status && status == true) {
+
+                        sessionStorage.setItem('<?php echo $current_reservation_id; ?>', true);
+
+                        $('#otp-verified').show();
+
+                        // Inotify unsa ang OTP
+                        window.notyf.open({
+                            type: 'success',
+                            message: message,
+                            duration: 3000,
+                            position: {
+                                x: 'center',
+                                y: 'top'
+                            }
+                        });
+                    }
+                    else {
+
+                        // Ipakita ang input, erason ang sud
+                        $('#otp-input').val('').closest('div').show();
+
+                        // Ipakita ang resend
+                        $('.resend').show();
+
+                        // Error message
+                        window.notyf.open({
+                            type: 'error',
+                            message: message,
+                            duration: 3000,
+                            position: {
+                                x: 'center',
+                                y: 'top'
+                            }
+                        });
+                    }
+                })
+                .fail((error) => {console.log(error)
+
+                    // Taguon ang spinner, ipakita ang resend
+                    $('.spinner-border, .resend').toggle();
+
+                    // Ipakita ang input, erason ang sud
+                    $('#otp-input').val('').closest('div').show();
+
+                    // Error message
+                    window.notyf.open({
+                        type: 'error',
+                        message: 'Failed to verify OTP.<br/>Please try again later.',
+                        duration: 3000,
+                        position: {
+                            x: 'center',
+                            y: 'top'
+                        }
+                    });
+                });
+            });
+
             // Event Listener for add resource
             $('.btn-new').click(() => {
+
+                const resident = $('#resident option:selected').not(':disabled').val();
+                const is_resident_verified = sessionStorage.getItem('<?php echo $current_reservation_id; ?>');
+                const date_reserved = $('[name="date_reserved"]').val();
+
+                try {
+                    // Tan awn ug naa ba resident gipili
+                    if (!resident) {
+                        throw 'Please Select Resident';
+                    }
+
+                    // Tan awn ug verified
+                    if (!is_resident_verified) {
+                        throw 'Verify Resident Mobile Number';
+                    }
+
+                    // Tan awn ug naa date gipili
+                    if (!date_reserved) {
+                        throw 'Select Date First';
+                    }
+                }
+                catch (error) {
+                    // Prompt Error
+                    window.notyf.open({
+                        type: 'error',
+                        message: error,
+                        duration: 3000,
+                        position: {
+                            x: 'center',
+                            y: 'top'
+                        }
+                    });
+
+                    return false;
+                }
 
                 // Include to resources
                 $('.resources').append(`
@@ -646,22 +801,27 @@
                         
                         // Show message if there is
                         if (message) {
-                        Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000,
-                        }).fire({
-                            icon: message.type,
-                            title: message.message
-                        });
+                            Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                            }).fire({
+                                icon: message.type,
+                                title: message.message
+                            });
                         }
 
                         // Check if status is ok and redirect
                         if (status && status == true) {
-                        window.location.replace(redirect);
 
-                        return true;
+                            // Hawanan ang session
+                            sessionStorage.clear();
+
+                            // Balhin
+                            window.location.replace(redirect);
+
+                            return true;
                         }
 
                         // Enable ang gasubmit

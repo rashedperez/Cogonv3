@@ -7,49 +7,43 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-md-flex justify-content-between">
-                                    <h1 class="h3 mt-2">Resources</h1>
-                                    <?php if ($this->session->userdata('role') == ADMIN): ?>
+                                    <h1 class="h3 mt-2">Staff Set-up</h1>
                                     <?php 
-                                        // Add Resource Button
-                                        $addresource_attr = array(
+                                        // Add User Button
+                                        $add_attr = array(
                                             'class' => "btn btn-success" ,
                                             'data-toggle' => 'modal',
-                                            'data-target' => '#addresourcemodal',
-                                            'content' => 'Add New Resource'
+                                            'data-target' => '#addusermodal',
+                                            'content' => 'Add New User'
                                         );
-                                        echo form_button($addresource_attr);
+                                        echo form_button($add_attr);
                                     ?>
-                                    <?php endif ?>
                                 </div>
                                 <div class="card-body">
                                     <table id="datatables-buttons" class="table table-striped" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Resource Type</th>
-                                                <th>Name</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th class="text-center" style="width: 150px !important;">Action</th>
+                                                <th>Role</th>
+                                                <th>Full Name</th>
+                                                <th>Username</th>
+                                                <th>Status</th>
+                                                <th class="text-center" style="width: 150px !important;">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!--Facility table body -->
-                                            <?php foreach ($resources as $resource): ?>
+                                            <!--User table body -->
+                                            <?php foreach ($users as $user): ?>
                                             <tr>
-                                                <td><?php echo ucfirst($resource->type); ?></td>
-                                                <td><?php echo $resource->name;?></td>
-                                                <td><?php echo $resource->price; ?></td>
-                                                <td><?php echo $resource->quantity; ?></td>
+                                                <td><?php echo ucfirst($user->role); ?></td>
+                                                <td><?php echo $user->full_name;?></td>
+                                                <td><?php echo $user->name; ?></td>
+                                                <td><?php echo ucfirst($user->status); ?></td>
                                                 <td class="text-center">
-                                                    <!--Resource Information Button-->
-                                                    <button class="btn border-0 text-info" data-toggle="modal" data-target="#resourceinfo" data-data='<?= json_encode($resource) ?>'> 
-                                                        <i data-feather="info"></i>
-                                                    </button>
-                                                    <button class ="btn border-0 text-primary" data-toggle="modal" data-target="#updateresourcemodal"
-                                                        data-data='<?= json_encode($resource)?>'>
+                                                    <!--User Information Button-->
+                                                    <button class ="btn border-0 text-primary" data-toggle="modal" data-target="#updateusermodal"
+                                                        data-data='<?= json_encode($user)?>'>
                                                         <i data-feather="edit"></i>
                                                     </button>
-                                                    <button class="btn border-0 delete text-danger" data="<?php echo $resource->id; ?>"><i data-feather="trash"></i></button>
                                                 </td>
                                             </tr>
                                             <?php endforeach; ?>
@@ -63,24 +57,24 @@
             </main>
         </div>
     </div>
-	<?php include('application\views\resource\modals.php'); ?>
-	<script src="<?php echo base_url('assets/js/resource.js');?>"></script>
+	<?php include('application\views\user\modals.php'); ?>
+	<script src="<?php echo base_url('assets/js/user.js');?>"></script>
 	
 	<script>
 		// Notifications
-		<?php if ($this->session->flashdata('resource_status')): ?>
-			<?php $notification = $this->session->flashdata('resource_status'); ?>
+		<?php if ($this->session->flashdata('setup_status')): ?>
+			<?php $notification = $this->session->flashdata('setup_status'); ?>
 
 			// Prompt Notification
-			Swal.mixin({
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				timer: 3000,
-			}).fire({
-				icon: '<?php echo $notification['type']; ?>',
-				title: '<?php echo $notification['message']; ?>'
-			});
+            window.notyf.open({
+                type: '<?php echo $notification['type']; ?>',
+                message: '<?php echo $notification['message']; ?>',
+                duration: 3000,
+                position: {
+                    x: 'right',
+                    y: 'top'
+                }
+            });
 
 		<?php endif ?>
 	</script>
