@@ -63,7 +63,7 @@
                                                 <td class="text-center"><?php echo $reservation->reserver; ?></td>
                                                 <td class="text-center"><?php echo date('F j, Y - g:i A', strtotime($reservation->date_reserved)); ?></td>
                                                 <td class="text-center">
-                                                    <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center justify-content-end">
                                                         <?php if ($reservation->status == CONFIRMED): ?>
                                                         <button class="btn btn-outline-success btn-sm btn-return mr-1" data-data="<?php echo $reservation->id; ?>" style="font-weight: 500">Confirm Returned</button>
                                                         <button class="btn btn-outline-danger btn-sm btn-cancel" data-data="<?php echo $reservation->id; ?>" style="font-weight: 500">Cancel Reservation</button>

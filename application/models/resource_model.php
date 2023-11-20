@@ -69,5 +69,28 @@
             return $update_result;
         }
         
+        // Tan awn ang resources nga nakawaan naba gireserve ron
+        public function check_resources_for_todays_reservation() {
+
+            // Kwaon nakareserve ron
+            $reserved_today = $this->reservation_model->get_paid_reservations_for_today();
+
+            foreach  ($reserved_today as $reservation) {
+
+                // Kwaon tanan gireserve nga resources
+                $resources = $this->reservation_model->get_reservation_details($reservation->id);
+
+                foreach ($resources as $resource) {
+
+                    // Kwaan ang quantity
+                    $this->decrement($resource->resource_id, $resource->quantity);
+                }
+
+                // Update nakwaan na
+                $this->reservation_model->update_reservation($reservation->id, array(
+                    'is_taken' => TRUE
+                ));
+            }
+        }
     }
 ?>

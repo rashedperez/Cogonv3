@@ -35,6 +35,9 @@
             </div>
           </div>
         </div>
+        <div class="d-flex justify-content-end w-100 mt-1">
+          <p class="additional">Additional Fees: ₱<span>Oiiii badang chupapi momniyanyo</span></p>
+        </div>
         <div class="text-center py-3">
           <h3 class="total mb-0">Total Amount &nbsp; ₱<span>69420.00</span></h3>
         </div>

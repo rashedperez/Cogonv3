@@ -148,7 +148,7 @@
 								<i class="align-middle" data-feather="settings"></i>
 							</a>
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
-								<span style="color: #495057"><i class="mr-1" data-feather="user" style="color: #495057"></i><?php echo $this->session->userdata('name'); ?></span>
+								<span style="color: #495057"><b class="mr-1"><?php echo $this->session->userdata('id'); ?></b><?php echo $this->session->userdata('name'); ?></span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
 								<a class="dropdown-item" href="<?php echo base_url('user/logout'); ?>"><i class="mr-3" data-feather="log-out" style="color: #495057"></i>Sign out</a>

@@ -135,5 +135,19 @@
 
             return $query->result();
         }
+
+        // Kwaon ang nakareserve ron
+        public function get_paid_reservations_for_today() {
+
+            $this->db->select('id');
+            $this->db->where('date_paid !=', NULL);
+            $this->db->where('status', CONFIRMED);
+            $this->db->where('DATE_FORMAT(date_reserved, "%Y-%m-%d") =', date('Y-m-d'));
+            $this->db->where('is_taken', FALSE);
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('reservation');
+
+            return $query->result();
+        }
     }
 ?>

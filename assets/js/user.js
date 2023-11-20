@@ -10,11 +10,12 @@ $('#updateusermodal').on('show.bs.modal', event => {
     setTimeout(() => modal.find('.badang, .modal-body').toggle(), 200);
 
     // Update Content
+    modal.find('[href="#resetpasswordmodal"]').attr('data-id', data.id).attr('data-name', data.full_name);
     modal.find('#role').val(data.role);
     modal.find('#full_name').val(data.full_name);
     modal.find('#username').val(data.name);
     modal.find('#status').prop('checked', data.status == 'active');
-    modal.find('#id').val(data.id);
+    $('[name="id"]').val(data.id);
 
     // Check ug Admin ba
     if (data.role == 'admin') {
@@ -24,6 +25,17 @@ $('#updateusermodal').on('show.bs.modal', event => {
       modal.find('#status').closest('label').show();
     }
 });
+
+// Bantay mugawas ang reset password
+$('#resetpasswordmodal').on('show.bs.modal', ({ currentTarget, relatedTarget }) => {
+
+  // Tago ang nigawas
+  $('.modal.show').modal('hide');
+
+  // Update Display
+  $(currentTarget).find('h2 span').text($(relatedTarget).data('name'));
+
+}).on('hide.bs.modal', ({ currentTarget }) => $(currentTarget).find('#id').val(''));
 
 // Bantay nay mosubmit nga form
 $('form').on('submit', (e) => {

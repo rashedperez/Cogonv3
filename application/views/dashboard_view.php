@@ -64,6 +64,26 @@
 					</div>
 				</div>
 			</main>
+
+	<script>
+		// Notifications
+		<?php if ($this->session->flashdata('dashboard_status')): ?>
+			<?php $notification = $this->session->flashdata('dashboard_status'); ?>
+
+			// Prompt Notification
+            window.notyf.open({
+                type: '<?php echo $notification['type']; ?>',
+                message: '<?php echo $notification['message']; ?>',
+                duration: 3000,
+                position: {
+                    x: 'right',
+                    y: 'top'
+                }
+            });
+
+		<?php endif ?>
+	</script>
+
 	<!-- Calendar Script -->
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {

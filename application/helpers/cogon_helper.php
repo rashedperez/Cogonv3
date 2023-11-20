@@ -17,3 +17,7 @@ function format_short_quantity($measurement, $amount) {
         default: return $amount . $measurement;
     }
 }
+
+function format_id_number($id) {
+    return str_pad($id, 6, '0', STR_PAD_LEFT);
+}

@@ -7,6 +7,9 @@
             if (!$this->user_model->is_logged_in()) {
                 redirect();
             }
+
+            // Tan awn ang resources nga nakawaan naba gireserve ron
+            $this->resource_model->check_resources_for_todays_reservation();
         }
 
         public function resource_index()

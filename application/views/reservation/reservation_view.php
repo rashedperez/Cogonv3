@@ -27,15 +27,15 @@
                                     <div class="form-group col-md-12 my-0">
                                         <div class="contact-detail mb-3" style="display: none">
                                             <div class="d-flex align-items-center">
-                                                <p class="mb-0" style="font-weight: 500">Contact Number: <span>09123456789</span></p>
+                                                <p class="label mb-0" style="font-weight: 500">Contact Number: <span class="label">09123456789</span></p>
                                                 <div class="spinner-border spinner-border-sm text-secondary ml-3" role="status" style="display: none"></div>
-                                                <a href="#" id="generate-otp" class="btn-link text-success ml-3" style="font-weight: bold">Send Code</a>
+                                                <a href="#" id="generate-otp" class="btn-link text-success ml-3 label" style="font-weight: bold">Send Code</a>
                                                 <div class="input-group w-auto ml-3" style="display: none">
-                                                    <input type="text" class="form-control form-control-sm" id="otp-input" style="width: 225px"/>
-                                                    <button type="button" class="btn btn-success btn-sm btn-verify">Verify</button>
+                                                    <input type="text" class="form-control form-control-sm label" id="otp-input" style="width: 225px"/>
+                                                    <button type="button" class="btn btn-success btn-sm btn-verify label">Verify</button>
                                                 </div>
                                                 <div class="ml-3 text-success" id="otp-verified" style="display: none">verified number</div>
-                                                <button type="button" class="btn btn-transparent p-0 ml-3 disabled resend" style="display: none">resend after <span>200s</span></button>
+                                                <button type="button" class="btn btn-transparent p-0 ml-3 disabled resend" style="display: none">resend after <span class="label">200s</span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -282,6 +282,15 @@
 
             // Magbantay sa resident ug mausab, (currentTarget: ang element nga nagtrigger anang usab)
             $('#resident').change(({ currentTarget }) => {
+
+                // Hawanan ang session
+                sessionStorage.clear();
+
+                // Pakita verify balik
+                $('#generate-otp').closest('div').find('*').not('.label').hide().closest('div').find('#generate-otp').show();
+
+                // Clear Input
+                $('#otp-input').val('');
 
                 // Tanan resident
                 const residents = <?php echo json_encode($residents); ?>;

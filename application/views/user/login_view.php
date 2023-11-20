@@ -47,9 +47,6 @@
 											<div class="form-group">
 												<label>Password</label>
 												<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
-												<small class="mt-3">
-													<a href="<?php echo base_url('user/forgot_password');?>">Forgot password?</a>
-												</small>
 											</div>
 											
 											<div class="text-center mt-3">

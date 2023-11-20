@@ -86,25 +86,38 @@
             // Run validation
             if ($this->form_validation->run()) {
 
-                // Add
-                if (empty($id)) {
+                try {
 
-                    // Reservation
-                    $reservation_data = array(
-                        'Res_id' => $resident,
-                        'date_reservation' => date('Y-m-d H:i:s'),
-                        'date_reserved'=> $date_reserved,
-                        'status' => PENDING
-                    );
-                    
-                    // Add reservation attempt
-                    $reservation = $this->reservation_model->add_reservation($reservation_data);
+                    // Add
+                    if (empty($id)) {
 
-                    // Check reservation is added
-                    if ($reservation !== FALSE) {
+                        // Validation for quantity
+                        for ($i = 0; $i < count($resource); $i++) {
 
-                        try {
+                            // Kwaon ang resource
+                            $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
+
+                            // Check ug naa bay nalapas sa quantity
+                            if ((int) $current_resource->quantity < (int) $quantity[$i]) {
+                                throw new Exception("$current_resource->name only has $current_resource->quantity left.");
+                            }
+                        }
+
+                        // Reservation
+                        $reservation_data = array(
+                            'Res_id' => $resident,
+                            'date_reservation' => date('Y-m-d H:i:s'),
+                            'date_reserved'=> $date_reserved,
+                            'is_taken' => FALSE,
+                            'status' => PENDING
+                        );
                         
+                        // Add reservation attempt
+                        $reservation = $this->reservation_model->add_reservation($reservation_data);
+
+                        // Check reservation is added
+                        if ($reservation !== FALSE) {
+                            
                             // Loop all reservation facilities
                             for ($i = 0; $i < count($resource); $i++) {
 
@@ -114,7 +127,7 @@
                                 // Check if resource is a vehicle
                                 if ($current_resource->measurement == KILOMETER) {
                                     if (empty($rental_fee[$i])) {
-                                        throw new Exception();
+                                        throw new Exception('Rental fee is required for vehicles');
                                     }
                                 }
 
@@ -141,91 +154,92 @@
                                 'redirect' => base_url('reservation/list')
                             );
                         }
-                        // There is error
-                        catch (\Throwable $th) {
-
-                            // Delete ang naadd nga reservation
-                            $this->reservation_model->delete_reservation($reservation);
-
-                            $response['message'] = ['type' => 'error', 'message' => 'Failed To Reserve'];
-                        }
                     }
-                }
-                // Update
-                else {
+                    // Update
+                    else {
 
-                    // Reservation
-                    $reservation_data = array(
-                        'Res_id' => $resident,
-                        'date_reserved'=> $date_reserved
-                    );
+                        // Reservation
+                        $reservation_data = array(
+                            'date_reserved'=> $date_reserved
+                        );
 
-                    // Update reservation attempt
-                    $reservation = $this->reservation_model->update_reservation($id, $reservation_data);
+                        // Update reservation attempt
+                        $reservation = $this->reservation_model->update_reservation($id, $reservation_data);
 
-                    // Check reservation is added
-                    if ($reservation !== FALSE) {
+                        // Check reservation is added
+                        if ($reservation !== FALSE) {
 
-                        try {
+                            try {
 
-                            // Current reservation details
-                            $current_details = $this->reservation_model->get_reservation_details($id);
-                        
-                            // Loop all reservation facilities
-                            for ($i = 0; $i < count($resource); $i++) {
+                                // Current reservation details
+                                $current_details = $this->reservation_model->get_reservation_details($id);
+                            
+                                // Loop all reservation facilities
+                                for ($i = 0; $i < count($resource); $i++) {
 
-                                // Kwaon ang resource
-                                $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
+                                    // Kwaon ang resource
+                                    $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
 
-                                // Check if resource is a vehicle
-                                if ($current_resource->measurement == KILOMETER) {
-                                    if (empty($rental_fee[$i])) {
-                                        throw new Exception();
+                                    // Check if resource is a vehicle
+                                    if ($current_resource->measurement == KILOMETER) {
+                                        if (empty($rental_fee[$i])) {
+                                            throw new Exception();
+                                        }
+                                    }
+
+                                    // Add reservation details
+                                    $reservation_details = array(
+                                        'reservation_id' => $id,
+                                        'resource_id' => $resource[$i],
+                                        'quantity' => $quantity[$i],
+                                        'rental_fee' => $current_resource->measurement == KILOMETER ? $rental_fee[$i] : NULL,
+                                        'has_driver' => !empty($has_driver[$i]) ? TRUE : FALSE,
+                                        'driver' => $current_resource->measurement == KILOMETER ? $driver[$i] : NULL,
+                                        'purpose' => $purpose[$i],
+                                        'purpose_specific' => $others[$i]
+                                    );
+
+                                    // Update existing if less
+                                    if ($i < count($current_details)) {
+                                        // Update
+                                        $this->reservation_model->update_reservation_detail($current_details[$i]->id, $reservation_details);
+                                    }
+                                    else {
+                                        // Add attempt
+                                        $this->reservation_model->add_reservation_detail($reservation_details);
                                     }
                                 }
 
-                                // Add reservation details
-                                $reservation_details = array(
-                                    'reservation_id' => $id,
-                                    'resource_id' => $resource[$i],
-                                    'quantity' => $quantity[$i],
-                                    'rental_fee' => $current_resource->measurement == KILOMETER ? $rental_fee[$i] : NULL,
-                                    'has_driver' => !empty($has_driver[$i]) ? TRUE : FALSE,
-                                    'driver' => $current_resource->measurement == KILOMETER ? $driver[$i] : NULL,
-                                    'purpose' => $purpose[$i],
-                                    'purpose_specific' => $others[$i]
-                                );
-
-                                // Update existing if less
+                                // Delete excess
                                 if ($i < count($current_details)) {
-                                    // Update
-                                    $this->reservation_model->update_reservation_detail($current_details[$i]->id, $reservation_details);
+                                    for ($i = $i; $i < count($current_details); $i++) {
+                                        $this->reservation_model->delete_reservation_detail($current_details[$i]->id);
+                                    }
                                 }
-                                else {
-                                    // Add attempt
-                                    $this->reservation_model->add_reservation_detail($reservation_details);
-                                }
-                            }
 
-                            // Delete excess
-                            if ($i < count($current_details)) {
-                                for ($i = $i; $i < count($current_details); $i++) {
-                                    $this->reservation_model->delete_reservation_detail($current_details[$i]->id);
-                                }
+                                $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'Reservation Updated']);
+                                
+                                $response = array(
+                                    'status' => TRUE,
+                                    'redirect' => base_url('reservation/list')
+                                );
                             }
-
-                            $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'Reservation Updated']);
-                            
-                            $response = array(
-                                'status' => TRUE,
-                                'redirect' => base_url('reservation/list')
-                            );
-                        }
-                        // There is error
-                        catch (\Throwable $th) {
-                            $response['message'] = ['type' => 'error', 'message' => 'Failed To Update Reservation'];
+                            // There is error
+                            catch (\Throwable $th) {
+                                $response['message'] = ['type' => 'error', 'message' => 'Failed To Update Reservation'];
+                            }
                         }
                     }
+                }
+                // There is error
+                catch (Exception $e) {
+
+                    // Delete ang naadd nga reservation if nabuhatan na
+                    if (isset($reservation)) {
+                        $this->reservation_model->delete_reservation($reservation);
+                    }
+
+                    $response['message'] = ['type' => 'error', 'message' => $e->getMessage()];
                 }
             }
             else {
@@ -269,26 +283,16 @@
                 redirect('reservation/list');
             }
 
-            // Get Reservation Resources
-            $resources = $this->reservation_model->get_reservation_details($id);
-
-            // Update Resources Quantity
-            foreach ($resources as $resource) {
-
-                // Decrement resource quantity
-                $this->resource_model->decrement($resource->resource_id, $resource->quantity);
-            }
-
             // Get reservation
             $reservation = $this->reservation_model->get_reservation($id);
 
             // SMS Data
-            $reserver = $this->resident_model->get_resident_by_id($reservation->Res_id)->name;
-            $date_reserved = date('M d, Y - ga', $reservation->date_reserved);
+            $reserver = $this->resident_model->get_resident_by_id($reservation->Res_id);
+            $date_reserved = date('M d, Y - ga', strtotime($reservation->date_reserved));
             $reference_number = format_reference_number($id);
 
             // Send SMS
-            $this->sms->send($mobile_number, "Reservation confirmed for $reserver at Barangay Cogon Pardo. Date & Time: $date_reserved. Ref: $reference_number");
+            $this->sms->send($reserver->contact_num, "Reservation confirmed for $reserver->name at Barangay Cogon Pardo. Date & Time: $date_reserved. Ref: $reference_number");
 
             // Show success message
             $this->session->set_flashdata('reservation_status', ['type' => 'success', 'message' => 'The confirmed booking will be appear in the Rented Resources List']);

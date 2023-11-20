@@ -30,7 +30,7 @@
 							<div class="text-center mt-4">
 								<h1 class="h2">Reset password</h1>
 								<p class="lead">
-									Enter your email to reset your password.
+									For security, update your temporary password
 								</p>
 							</div>
 
@@ -38,7 +38,7 @@
 								<div class="card-body">
 									<div class="m-sm-4">
 										<?php echo form_open('user/update_new_password'); ?>
-											<input type="hidden" name="id" value="<?php echo $this->session->flashdata('forgot_password_user_id'); ?>">
+											<input type="hidden" name="id" value="<?php echo $this->session->userdata('reset_password_user_id'); ?>">
 											<div class="form-group">
 												<label>Enter New Password</label>
 												<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter New Password" />
@@ -86,14 +86,14 @@
 						
 						// Show message if there is
 						if (message) {
-							Swal.mixin({
-								toast: true,
-								position: 'top-end',
-								showConfirmButton: false,
-								timer: 3000,
-							}).fire({
-								icon: message.type,
-								title: message.message
+							window.notyf.open({
+								type: message.type,
+								message: message.message,
+								duration: 3000,
+								position: {
+									x: 'right',
+									y: 'top'
+								}
 							});
 						}
 
@@ -114,15 +114,15 @@
 					},
 					error: () => {
 						// Show error
-							Swal.mixin({
-								toast: true,
-								position: 'top-end',
-								showConfirmButton: false,
-								timer: 3000,
-							}).fire({
-								icon: 'error',
-								title: 'Something went wrong. Please try again later'
-							});
+						window.notyf.open({
+							type: 'error',
+							message: 'Something went wrong. Please try again later',
+							duration: 3000,
+							position: {
+								x: 'right',
+								y: 'top'
+							}
+						});
 
 						// Enable ang gasubmit
 						submitter.prop('disabled', false);

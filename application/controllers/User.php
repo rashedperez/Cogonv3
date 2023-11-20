@@ -47,9 +47,17 @@ class User extends CI_Controller {
 
                     $this->session->set_userdata(array(
                         'logged_in' => TRUE,
+                        'id' => format_id_number($user->id),
                         'role' => $user->role,
                         'name' => $user->full_name
                     ));
+
+                    // Check ug need machange pass
+                    if ($user->password_change_required) {
+
+                        $this->session->set_userdata('reset_password_user_id', $user->id);
+                        redirect('user/reset_password');
+                    }
 
                     redirect('dashboard');
                 }
@@ -141,24 +149,21 @@ class User extends CI_Controller {
     public function reset_password() {
 
         // Check ug naka login
-        if ($this->user_model->is_logged_in()) {
-            redirect('dashboard');
+        if (!$this->user_model->is_logged_in()) {
+            redirect();
         }
 
         try {
 
-            $user_id = $this->session->flashdata('forgot_password_user_id');
+            $user_id = $this->session->userdata('reset_password_user_id');
 
             // Check if naa ba user ID
             if (!$user_id) {
-                throw new Exception('Failed to reset password. Reset access code may be expired');
+                throw new Exception();
             }
-        } catch (Exception $e) {
-            
-            $this->session->set_flashdata('forgot_password_status', ['type' => 'error', 'message' => $e->getMessage()]);
-            
-            // Redirect forgot password
-            redirect('user/forgot_password');
+        } catch (Exception $e) {            
+            // Redirect to dashboard
+            redirect();
         }        
 
         $this->load->view('user/reset_password');
@@ -168,8 +173,8 @@ class User extends CI_Controller {
     public function update_new_password() {
 
         // Check ug naka login
-        if ($this->user_model->is_logged_in()) {
-            redirect('dashboard');
+        if (!$this->user_model->is_logged_in()) {
+            redirect();
         }
 
         // Set validation
@@ -187,14 +192,17 @@ class User extends CI_Controller {
             }
             
             // Update attemmpt
-            if ($this->user_model->update_user($POST['id'], ['password' => password_hash($POST['password'], PASSWORD_BCRYPT, ['cost' => 12])])) {
+            if ($this->user_model->update_user($POST['id'], ['password' => password_hash($POST['password'], PASSWORD_BCRYPT, ['cost' => 12]), 'password_change_required' => FALSE])) {
+
+                // Unset Reset ID
+                $this->session->unset_userdata('reset_password_user_id');
 
                 // Set message
                 $this->session->set_flashdata('login_status', ['type' => 'success', 'message' => 'Password Updated']);
 
                 $response = array(
                     'status' => TRUE,
-                    'redirect' => base_url()
+                    'redirect' => base_url('dashboard')
                 );
             }
             else {
@@ -251,7 +259,8 @@ class User extends CI_Controller {
                     'full_name' => $POST['full_name'],
                     'name' => $POST['username'],
                     'password' => password_hash($POST['password'], PASSWORD_BCRYPT, ['cost' => 12]),
-                    'status' => isset($POST['status']) ? ACTIVE : INACTIVE
+                    'password_change_required' => TRUE,
+                    'status' => ACTIVE
                 );
 
                 // Save attemmpt
@@ -301,20 +310,9 @@ class User extends CI_Controller {
             if (!isset($POST['id'])) {
                 throw new Exception('Failed to Update User');
             }
-
-            // New Data
-            $user_details = array(
-                'name' => $POST['username'],
-                'status' => isset($POST['status']) ? ACTIVE : INACTIVE
-            );
-
-            // Iapil ang password ug naa
-            if (isset($POST['password'])) {
-                $user_details['password'] = password_hash($POST['password'], PASSWORD_BCRYPT, ['cost' => 12]);
-            }
             
             // Update attemmpt
-            if ($this->user_model->update_user($POST['id'], $user_details)) {
+            if ($this->user_model->update_user($POST['id'], ['status' => isset($POST['status']) ? ACTIVE : INACTIVE])) {
 
                 // Set message
                 $this->session->set_flashdata('setup_status', ['type' => 'success', 'message' => 'User Updated']);
@@ -328,6 +326,62 @@ class User extends CI_Controller {
                 throw new Exception('Failed to Update User');
             }
         } catch (Exception $e) {
+            $response['message'] = ['type' => 'error', 'message' => $e->getMessage()];
+        }
+
+        echo json_encode($response);
+    }
+
+    // Reset Password Temporarily
+    public function temp_reset() {
+
+        // Check ug naka login
+        if (!$this->user_model->is_logged_in()) {
+            redirect();
+        }
+
+        // Set validation
+        $this->form_validation->set_error_delimiters('', '');
+        $this->form_validation->set_rules('password', 'Password', 'trim|max_length[30]');
+        $this->form_validation->set_rules('password_confirm', 'Confirm Password', 'trim|matches[password]|max_length[30]');
+
+        try {
+
+            // Run validation
+            if (!$this->form_validation->run()) {
+                throw new Exception(validation_errors());
+            }
+            
+            $POST = $this->input->post();
+
+            // Way ID
+            if (!isset($POST['id'])) {
+                throw new Exception('Failed to Reset Password');
+            }
+
+            // New Data
+            $user_details = array(
+                'password' => password_hash($POST['password'], PASSWORD_BCRYPT, ['cost' => 12]),
+                'password_change_required' => TRUE
+            );
+            
+            // Update attemmpt
+            if ($this->user_model->update_user($POST['id'], $user_details)) {
+
+                // Set message
+                $this->session->set_flashdata('setup_status', ['type' => 'success', 'message' => 'Reset Password Successful']);
+
+                // Set response
+                $response = array(
+                    'status' => TRUE,
+                    'redirect' => base_url('user/setup')
+                );
+            }
+            else {
+                throw new Exception('Failed to Reset Password');
+            }
+        }
+        catch (Exception $e) {
             $response['message'] = ['type' => 'error', 'message' => $e->getMessage()];
         }
 

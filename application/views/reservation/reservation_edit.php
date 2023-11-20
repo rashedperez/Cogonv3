@@ -16,7 +16,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputresident">Resident</label>
-                                        <select id="inputresident" class="form-control" name="resident">
+                                        <select id="inputresident" class="form-control" name="resident" disabled>
                                             <option selected disabled>Choose...</option>
                                             <?php foreach ($residents as $resident): ?>
                                             <option value="<?php echo $resident->id; ?>" <?php echo $resident->id == $reservation->Res_id? 'selected' : ''; ?>><?php echo $resident->name; ?></option>

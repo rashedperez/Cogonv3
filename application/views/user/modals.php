@@ -5,12 +5,6 @@
       <?php echo form_open('user/add');?>
       <div class="modal-header">
         <h5 class="modal-title">Add New User</h5>
-        <label>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" name="status"/>
-                <label class="form-check-label">Active</label>
-            </div>
-        </label>
       </div>
         <div class="modal-body mx-3 py-3">
           <div class = "row">
@@ -155,6 +149,7 @@
                   'class' => 'form-control',
                   'name' => "username",
                   'required' => 'required',
+                  'disabled' => 'disabled'
                 );
                 
                 echo form_input($updateusername_attr);
@@ -162,6 +157,43 @@
               <!--End User Name -->
             </div>
             <div class="col-12 mt-3">
+              <a href="#resetpasswordmodal" data-toggle="modal">Reset Password</a>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer mx-3 py-3">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <?php 
+            // Add Resource Button
+            $add_resource_attr = array(
+              'class' => 'btn btn-success',
+              'value' => 'Add Resource',
+              'type' => 'submit',
+              'content' => 'Update Member'
+            );
+
+            echo form_button($add_resource_attr);
+          ?>
+        </div>
+      <?php echo form_close(); ?>
+    </div>
+  </div>
+</div>
+<!-- END Update User Modal -->
+
+<!-- Reset Password Modal -->
+<div class="modal fade" id="resetpasswordmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <?php echo form_open('user/temp_reset');?>
+        <div class="modal-body mx-3 py-3">
+          <div class="title text-center">
+            <h2>Reset Password for <span>"Bangangdaang"</span></h2>
+            <h4 class="text-muted">Create temporary password</h4>
+          </div>
+          <input type="hidden" id="id" name="id"/>
+          <div class = "row d-flex justify-content-center">
+            <div class="col-8 mt-3">
               <!-- Password Name -->
               <label for="validationCustom01" class="form-label font-weight-bold">Password</label>
               <?php 
@@ -176,7 +208,7 @@
               ?>
               <!--End Password Name -->
             </div>
-            <div class="col-12 mt-3">
+            <div class="col-8 mt-3">
               <!-- Confirim Password Name -->
               <label for="validationCustom01" class="form-label font-weight-bold">Confirm Password</label>
               <?php 
@@ -192,23 +224,22 @@
               <!--End Confirim Password Name -->
             </div>
           </div>
-        </div>
-        <div class="modal-footer mx-3 py-3">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <?php 
-            // Add Resource Button
-            $add_resource_attr = array(
-              'class' => 'btn btn-success px-4',
-              'value' => 'Add Resource',
-              'type' => 'submit',
-              'content' => 'Update Member'
-            );
+          <div class="mx-3 py-3 d-flex justify-content-center">
+            <?php 
+              // Add Resource Button
+              $add_resource_attr = array(
+                'class' => 'btn btn-primary',
+                'value' => 'Add Resource',
+                'type' => 'submit',
+                'content' => 'Reset'
+              );
 
-            echo form_button($add_resource_attr);
-          ?>
+              echo form_button($add_resource_attr);
+            ?>
+          </div>
         </div>
       <?php echo form_close(); ?>
     </div>
   </div>
 </div>
-<!-- END Update User Modal -->
+<!-- Reset Password Modal -->
