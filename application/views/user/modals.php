@@ -157,7 +157,7 @@
               <!--End User Name -->
             </div>
             <div class="col-12 mt-3">
-              <a href="#resetpasswordmodal" data-toggle="modal">Reset Password</a>
+              <a href="#resetpassword">Reset Password</a>
             </div>
           </div>
         </div>
@@ -192,38 +192,6 @@
             <h4 class="text-muted">Create temporary password</h4>
           </div>
           <input type="hidden" id="id" name="id"/>
-          <div class = "row d-flex justify-content-center">
-            <div class="col-8 mt-3">
-              <!-- Password Name -->
-              <label for="validationCustom01" class="form-label font-weight-bold">Password</label>
-              <?php 
-                $updatepassword_attr = array(
-                  'id' => 'name',
-                  'type' => 'password',
-                  'class' => 'form-control',
-                  'name' => "password"
-                );
-                
-                echo form_input($updatepassword_attr);
-              ?>
-              <!--End Password Name -->
-            </div>
-            <div class="col-8 mt-3">
-              <!-- Confirim Password Name -->
-              <label for="validationCustom01" class="form-label font-weight-bold">Confirm Password</label>
-              <?php 
-                $updateconfirmpassword_attr = array(
-                  'id' => 'name',
-                  'type' => 'password',
-                  'class' => 'form-control',
-                  'name' => "password_confirm"
-                );
-                
-                echo form_input($updateconfirmpassword_attr);
-              ?>
-              <!--End Confirim Password Name -->
-            </div>
-          </div>
           <div class="mx-3 py-3 d-flex justify-content-center">
             <?php 
               // Add Resource Button

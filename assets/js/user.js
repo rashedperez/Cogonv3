@@ -3,6 +3,7 @@ $('#updateusermodal').on('show.bs.modal', event => {
     const button = event.relatedTarget;  
     const data = JSON.parse(button.getAttribute('data-data'));
     const modal = $(event.currentTarget);
+    const reset_password_modal = $('#resetpasswordmodal');
 
     // Show badang
     modal.find('.badang, .modal-body').toggle();
@@ -10,7 +11,28 @@ $('#updateusermodal').on('show.bs.modal', event => {
     setTimeout(() => modal.find('.badang, .modal-body').toggle(), 200);
 
     // Update Content
-    modal.find('[href="#resetpasswordmodal"]').attr('data-id', data.id).attr('data-name', data.full_name);
+    modal.find('[href="#resetpassword"]').unbind('click').on('click', () => {
+
+      // Show confirmation
+      Swal.fire({
+        title: 'Are you sure you want to continue?',
+        text: `Reset Password of ${data.full_name}`,
+        showDenyButton: true,
+        confirmButtonText: 'Reset',
+        confirmButtonColor: '#E03444',
+        denyButtonText: 'Cancel',
+        denyButtonColor: '#495057',
+        reverseButtons: true
+      }).then((result) => {
+          
+        // Confirmed
+        if (result.isConfirmed) {
+            
+            // Submit Form
+            reset_password_modal.find('[type="submit"]').trigger('click');
+        }
+      });
+    });
     modal.find('#role').val(data.role);
     modal.find('#full_name').val(data.full_name);
     modal.find('#username').val(data.name);
@@ -52,26 +74,32 @@ $('form').on('submit', (e) => {
     method: 'POST',
     dataType: 'json',
     data: $(e.target).serialize(),
-    success: ({ status, message, redirect }) => {
+    success: ({ status, message, redirect, no_close }) => {
       
       // Show message if there is
       if (message) {
         Swal.mixin({
           toast: true,
-          position: 'top-end',
+          position: message.position ? message.position : 'top-end',
           showConfirmButton: false,
           timer: 3000,
+          showCloseButton: true
         }).fire({
           icon: message.type,
           title: message.message
         });
+
+        // Dili iclose ang swal
+        if (no_close) {
+          Swal.stopTimer();
+        }
       }
 
       // Check if status is ok and redirect
-      if (status && status == true) {
+      if (status && status == true && redirect) {
         window.location.replace(redirect);
 
-        return true;
+        return false;
       }
 
       // Enable ang gasubmit

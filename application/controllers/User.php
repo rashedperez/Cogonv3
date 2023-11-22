@@ -340,17 +340,7 @@ class User extends CI_Controller {
             redirect();
         }
 
-        // Set validation
-        $this->form_validation->set_error_delimiters('', '');
-        $this->form_validation->set_rules('password', 'Password', 'trim|max_length[30]');
-        $this->form_validation->set_rules('password_confirm', 'Confirm Password', 'trim|matches[password]|max_length[30]');
-
         try {
-
-            // Run validation
-            if (!$this->form_validation->run()) {
-                throw new Exception(validation_errors());
-            }
             
             $POST = $this->input->post();
 
@@ -359,22 +349,27 @@ class User extends CI_Controller {
                 throw new Exception('Failed to Reset Password');
             }
 
+            // Temporary password
+            $temp_password = random_string('alnum');
+
             // New Data
             $user_details = array(
-                'password' => password_hash($POST['password'], PASSWORD_BCRYPT, ['cost' => 12]),
+                'password' => password_hash($temp_password, PASSWORD_BCRYPT, ['cost' => 12]),
                 'password_change_required' => TRUE
             );
             
             // Update attemmpt
             if ($this->user_model->update_user($POST['id'], $user_details)) {
 
-                // Set message
-                $this->session->set_flashdata('setup_status', ['type' => 'success', 'message' => 'Reset Password Successful']);
-
                 // Set response
                 $response = array(
                     'status' => TRUE,
-                    'redirect' => base_url('user/setup')
+                    'no_close' => TRUE,
+                    'message' => array(
+                        'position' => 'top',
+                        'type' => 'info',
+                        'message' => "Temporary Password: $temp_password"
+                    )
                 );
             }
             else {
