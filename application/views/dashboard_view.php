@@ -20,7 +20,7 @@
 										</div>
 										<div class="d-inline-block ml-3">
 											<div class="stat">
-												<i class="align-middle" data-feather="calendar" style="color: red !important"></i>
+												<i class="align-middle" data-feather="calendar" style="color: green !important"></i>
 											</div>
 										</div>
 									</div>

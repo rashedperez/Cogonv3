@@ -53,7 +53,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-3 partial-hidden">
-                                                <label for="inputresident">Quantity</label>
+                                                <label for="inputresident"><?php echo ucfirst($resource->data->measurement); ?></label>
                                                 <input type="number" name="quantity[]" class="form-control watch-change quantity" min="0" placeholder="" value="<?php echo $resource->quantity; ?>"/>
                                             </div>
                                             <div class="form-group col-md-6 vehicle-details" <?php echo $resource->data->measurement == KILOMETER ? '' : 'style="display: none"'; ?>>
@@ -112,7 +112,7 @@
                 altInput: true,
                 altFormat: 'F j, Y - h:i K',
                 dateFormat: 'Y-m-d H:i:s',
-                minDate: 'today'
+                onReady: (selected_dates, date, instance) => instance.setDate(instance.input.value)
             });
 
             // Set SumoSelect Instance

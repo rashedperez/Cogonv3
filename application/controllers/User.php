@@ -179,10 +179,15 @@ class User extends CI_Controller {
 
         // Set validation
         $this->form_validation->set_error_delimiters('', '');
-        $this->form_validation->set_rules('password', 'Password', 'trim|max_length[30]');
-        $this->form_validation->set_rules('password_confirm', 'Confirm Password', 'trim|matches[password]|max_length[30]');
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|max_length[30]');
+        $this->form_validation->set_rules('password_confirm', 'Confirm Password', 'trim|required|matches[password]|max_length[30]');
 
         try {
+
+            // Check validation
+            if (!$this->form_validation->run()) {
+                throw new Exception(validation_errors());
+            }
             
             $POST = $this->input->post();
 

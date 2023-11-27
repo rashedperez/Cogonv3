@@ -74,34 +74,37 @@
 
             // Set validation
             $this->form_validation->set_error_delimiters('', '');
-            $this->form_validation->set_rules('resident', 'Resident', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('date_reserved', 'Date Reserved', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('resource[]', 'Resource', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('quantity[]', 'Quantity', 'trim|required|numeric|max_length[30]');
             $this->form_validation->set_rules('purpose[]', 'Purpose', 'trim|required|max_length[100]');
 
-            // Additional validation for vehicles
-            // Code here ...
+            // Additional validation for adding reservation
+            if (empty($id)) {
+                $this->form_validation->set_rules('resident', 'Resident', 'trim|required|max_length[100]');
+            }
 
             // Run validation
             if ($this->form_validation->run()) {
 
                 try {
 
+                    // Validation for quantity
+                    for ($i = 0; $i < count($resource); $i++) {
+
+                        // Kwaon ang resource
+                        $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
+
+                        $temp_quantity = in_array($current_resource->measurement, [KILOMETER, HOUR]) ? 1 : (int) $quantity[$i];
+
+                        // Check ug naa bay nalapas sa quantity
+                        if ((int) $current_resource->quantity < $temp_quantity) {
+                            throw new Exception("$current_resource->name only has $current_resource->quantity left.");
+                        }
+                    }
+
                     // Add
                     if (empty($id)) {
-
-                        // Validation for quantity
-                        for ($i = 0; $i < count($resource); $i++) {
-
-                            // Kwaon ang resource
-                            $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
-
-                            // Check ug naa bay nalapas sa quantity
-                            if ((int) $current_resource->quantity < (int) $quantity[$i]) {
-                                throw new Exception("$current_resource->name only has $current_resource->quantity left.");
-                            }
-                        }
 
                         // Reservation
                         $reservation_data = array(
@@ -135,7 +138,7 @@
                                 $reservation_details = array(
                                     'reservation_id' => $reservation,
                                     'resource_id' => $resource[$i],
-                                    'quantity' => $quantity[$i],
+                                    'quantity' => in_array($current_resource->measurement, [KILOMETER, HOUR]) ? 1 : (int) $quantity[$i],
                                     'rental_fee' => $current_resource->measurement == KILOMETER ? $rental_fee[$i] : NULL,
                                     'has_driver' => !empty($has_driver[$i]) ? TRUE : FALSE,
                                     'driver' => $current_resource->measurement == KILOMETER ? $driver[$i] : NULL,
@@ -183,7 +186,7 @@
                                     // Check if resource is a vehicle
                                     if ($current_resource->measurement == KILOMETER) {
                                         if (empty($rental_fee[$i])) {
-                                            throw new Exception();
+                                            throw new Exception('Rental fee is required for vehicles');
                                         }
                                     }
 
@@ -191,8 +194,7 @@
                                     $reservation_details = array(
                                         'reservation_id' => $id,
                                         'resource_id' => $resource[$i],
-                                        'quantity' => $quantity[$i],
-                                        'rental_fee' => $current_resource->measurement == KILOMETER ? $rental_fee[$i] : NULL,
+                                        'quantity' => in_array($current_resource->measurement, [KILOMETER, HOUR]) ? 1 : (int) $quantity[$i],
                                         'has_driver' => !empty($has_driver[$i]) ? TRUE : FALSE,
                                         'driver' => $current_resource->measurement == KILOMETER ? $driver[$i] : NULL,
                                         'purpose' => $purpose[$i],

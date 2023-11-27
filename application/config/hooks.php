@@ -21,7 +21,7 @@ $hook['post_controller'][] = function () {
     $RTR =& load_class('Router');
 
     // Pugos pa change pass
-    if ($CI->session->userdata('reset_password_user_id') && $RTR->method !== 'reset_password') {
+    if ($CI->session->userdata('reset_password_user_id') && $RTR->method !== 'reset_password' && $RTR->method !== 'update_new_password') {
         redirect('user/reset_password');
     }
     else if (!$CI->session->userdata('reset_password_user_id') && $RTR->method == 'reset_password') {
