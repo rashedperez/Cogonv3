@@ -95,6 +95,17 @@
                         // Kwaon ang resource
                         $current_resource = $this->resource_model->get_resource_by_id($resource[$i]);
 
+                        // Additional validation
+                        if (empty($resource[$i])) {
+                            throw new Exception('The Resource field is required');
+                        }
+                        else if (empty($quantity[$i])) {
+                            throw new Exception('The ' . ucfirst($current_resource->measurement) . ' field is required');
+                        }
+                        else if (empty($purpose[$i])) {
+                            throw new Exception('The Purpose field is required');
+                        }
+
                         $temp_quantity = in_array($current_resource->measurement, [KILOMETER, HOUR]) ? 1 : (int) $quantity[$i];
 
                         // Check ug naa bay nalapas sa quantity
