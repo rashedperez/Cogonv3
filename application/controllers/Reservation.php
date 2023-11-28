@@ -32,7 +32,7 @@
                     $resource->data = $this->resource_model->get_resource_by_id($resource->resource_id);
                     
                     // Format Quantity
-                    $resource->formatted_quantity = format_short_quantity($resource->data->measurement, $resource->quantity);
+                    $resource->formatted_quantity = format_short_quantity($resource->data->measurement, $resource->extent);
 
                     return $resource;
 
@@ -150,6 +150,7 @@
                                     'reservation_id' => $reservation,
                                     'resource_id' => $resource[$i],
                                     'quantity' => in_array($current_resource->measurement, [KILOMETER, HOUR]) ? 1 : (int) $quantity[$i],
+                                        'extent' => (int) $quantity[$i],
                                     'rental_fee' => $current_resource->measurement == KILOMETER ? $rental_fee[$i] : NULL,
                                     'has_driver' => !empty($has_driver[$i]) ? TRUE : FALSE,
                                     'driver' => $current_resource->measurement == KILOMETER ? $driver[$i] : NULL,
@@ -206,6 +207,7 @@
                                         'reservation_id' => $id,
                                         'resource_id' => $resource[$i],
                                         'quantity' => in_array($current_resource->measurement, [KILOMETER, HOUR]) ? 1 : (int) $quantity[$i],
+                                        'extent' => (int) $quantity[$i],
                                         'has_driver' => !empty($has_driver[$i]) ? TRUE : FALSE,
                                         'driver' => $current_resource->measurement == KILOMETER ? $driver[$i] : NULL,
                                         'purpose' => $purpose[$i],

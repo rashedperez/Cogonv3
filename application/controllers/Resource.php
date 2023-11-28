@@ -161,7 +161,7 @@
                     $resource->data = $this->resource_model->get_resource_by_id($resource->resource_id);
 
                     // Format Quantity
-                    $resource->formatted_quantity = format_short_quantity($resource->data->measurement, $resource->quantity);
+                    $resource->formatted_quantity = format_short_quantity($resource->data->measurement, $resource->extent);
 
                     return $resource;
 

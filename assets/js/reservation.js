@@ -89,7 +89,7 @@ $('#reservation-payment').on('show.bs.modal', event => {
       <div class="row" style="font-weight: 400">
         <div class="col-3 text-capitalize">` + resource.data.type + `</div>
         <div class="col-3 text-center">` + resource.data.name + `</div>
-        <div class="col-3 text-center">` + resource.quantity + `</div>
+        <div class="col-3 text-center">` + resource.extent + `</div>
         <div class="col-3 text-right">₱` + subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 }) + `</div>
       </div>
     `);
