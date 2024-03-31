@@ -111,6 +111,7 @@ define('RETURNED', 'returned');
 // User Roles
 define('ADMIN', 'admin');
 define('STAFF', 'staff');
+define('RESIDENT', 'resident');
 
 // User Status
 define('ACTIVE', 'active');

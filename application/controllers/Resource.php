@@ -14,6 +14,9 @@
 
         public function resource_index()
         {
+            // Only allow non-resident
+            $this->session->userdata('role') == RESIDENT && redirect('resource/rented');
+
             $data['resources'] = $this->resource_model->get_all_resources();
             
             $this->load->view('menu/menubar');

@@ -11,6 +11,9 @@
         
         public function resident_index() {
 
+            // Only allow non-resident
+            $this->session->userdata('role') == RESIDENT && redirect('resource/rented');
+
             $data['resident'] = $this->resident_model->get_all_resident();
 
             $this->load->view('menu/menubar');
@@ -29,10 +32,23 @@
             // Run validation
             if ($this->form_validation->run()) {
 
+                // Username
+                $username = strtolower(str_replace(' ', '.', $this->input->post('name')));
+                $password = random_string();
+                $user = $this->user_model->add_user(array(
+                    'role' => 'resident',
+                    'full_name' => $this->input->post('name'),
+                    'name' => $username,
+                    'password' => password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]),
+                    'password_change_required' => TRUE,
+                    'status' => ACTIVE
+                ));
+
                 $data = array(
                     'name' => $this->input->post('name'),
                     'address' => $this->input->post('address'),
                     'contact_num' => $this->input->post('contact_num'),
+                    'user_id' => $user
                 );
     
                 // Save attempt
@@ -40,6 +56,8 @@
 
                     $response = array(
                         'status' => TRUE,
+                        'username' => $username,
+                        'password' => $password,
                         'redirect' => base_url('resident/resident_index')
                     );
 

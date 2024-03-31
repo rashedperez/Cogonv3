@@ -74,6 +74,24 @@
       		  	</a>
 				<!--Dashboard SideBar-->
 				<ul class="sidebar-nav">
+					<?php if ($this->session->userdata('role') == RESIDENT): ?>
+					<li class="sidebar-item active">
+						<a href="<?php echo base_url('resource/rented');?>" class="sidebar-link">
+							<i class="align-middle text-white" data-feather="layers"></i> <span class="align-middle text-white">Dashboard</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="<?php echo base_url('reservation/reservation_index');?>" class="sidebar-link">
+							<i class="align-middle text-white" data-feather="calendar"></i> <span class="align-middle text-white">Reserve</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="<?php echo base_url('reservation/list');?>" class="sidebar-link">
+							<i class="align-middle text-white" data-feather="calendar"></i> <span class="align-middle text-white">Pending Reservations</span>
+						</a>
+					</li>
+					<?php endif ?>
+					<?php if ($this->session->userdata('role') != RESIDENT): ?>
 					<li class="sidebar-item active">
 						<a href="<?php echo base_url('dashboard/index');?>" class="sidebar-link">
 							<i class="align-middle text-white" data-feather="layers"></i> <span class="align-middle text-white">Dashboard</span>
@@ -113,6 +131,7 @@
 							<i class="align-middle text-white" data-feather="bell"></i> <span class="align-middle">Notify Resident</span>
 						</a>
 					</li>
+					<?php endif ?>
 					<?php if ($this->session->userdata('role') == ADMIN): ?>
 					<!-- User Set-up SideBar -->
 					<li class="sidebar-item">

@@ -58,7 +58,7 @@ $('form').on('submit', (e) => {
     method: 'POST',
     dataType: 'json',
     data: $(e.target).serialize(),
-    success: ({ status, message, redirect }) => {
+    success: async ({ status, message, password, redirect }) => {
       
       // Show message if there is
       if (message) {
@@ -70,6 +70,23 @@ $('form').on('submit', (e) => {
         }).fire({
           icon: message.type,
           title: message.message
+        });
+      }
+
+      // Password
+      if (username && password) {
+        await Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          showCloseButton: true
+        }).fire({
+          icon: 'success',
+          title: `
+            Username: ${ username }<br/>
+            Password: ${ password }
+          `
         });
       }
 

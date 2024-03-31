@@ -48,6 +48,17 @@ class User_model extends CI_Model {
         return $query->row();
     }
 
+    // Get User by ID
+    public function get_user_by_id($id) {
+
+        // Build
+        $this->db->where('id', $id);
+        $query = $this->db->get('users', 1);
+
+        // Return
+        return $query->row();
+    }
+
     // Get User
     public function get_users() {
 

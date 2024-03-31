@@ -81,7 +81,7 @@ $('#reservation-payment').on('show.bs.modal', event => {
   // Add to container
   const subtotal_array = data.resources.map(resource => {
     
-    const subtotal = parseFloat(resource.data.price) * parseFloat(resource.quantity);
+    const subtotal = parseFloat(resource.data.price) * parseFloat(resource.extent);
     const has_driver = !Number.isInteger(resource.driver) && parseFloat(resource.has_driver);
     const extras = (resource.rental_fee ? parseFloat(resource.rental_fee) : 0) + (!has_driver ? parseFloat(resource.driver ? resource.driver : 0) : 0);
     
@@ -98,7 +98,7 @@ $('#reservation-payment').on('show.bs.modal', event => {
       main: subtotal + extras,
       extras: extras
     };
-  });console.log(subtotal_array)
+  });
 
   const extras = subtotal_array.reduce((total, current) => total + current.extras, 0);
 

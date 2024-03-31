@@ -90,10 +90,12 @@
             <div class="col-3 text-right total">₱<span>Amount</span></div>
           </div>
         </div>
+        <?php if ($this->session->userdata('role') != RESIDENT): ?>
         <p class="text-muted text-center">Clicking "confirm payment" means the resident has paid, confirming the reservation</p>
         <form method="POST" class="d-flex justify-content-center">
           <button type="button" class="btn btn-pay text-white" style="background-color: #495057">Confirm Payment</button>
         </form>
+        <?php endif ?>
       </div>
     </div>
   </div>

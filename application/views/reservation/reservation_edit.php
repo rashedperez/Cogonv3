@@ -13,6 +13,9 @@
                         </div>
                         <div class="card-body">
                             <?php echo form_open('reservation/add', [], ['id' => $reservation->id]); ?>
+                                <?php if ($this->session->userdata('role') == RESIDENT): ?>
+                                <input type="hidden" name="resident" value="<?php echo $reservation->Res_id; ?>"/>
+                                <?php else: ?>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputresident">Resident</label>
@@ -24,6 +27,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                <?php endif ?>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputAddress2">Date Reserved</label>

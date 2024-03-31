@@ -40,5 +40,16 @@
             
             return $query->row();
         }
+
+        // Get Resident by User ID
+        public function get_resident_by_user_id($user_id) {
+
+            // Build
+            $this->db->where('user_id', $user_id);
+            $query = $this->db->get('resident', 1);
+            
+            // Return
+            return $query->row();
+        }
     }
 ?>

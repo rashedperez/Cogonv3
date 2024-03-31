@@ -14,6 +14,10 @@
                         </div>
                         <div class="card-body">
                             <?php echo form_open('reservation/add'); ?>
+                                <?php if ($this->session->userdata('role') == RESIDENT): ?>
+                                <?php $resident = current(array_filter($residents, fn($x) => $x->user_id == $this->session->userdata('user_id'))); ?>
+                                <input type="hidden" id="resident" name="resident" value="<?php echo $resident->id; ?>"/>
+                                <?php else: ?>
                                 <div class="form-row">
                                     <div class="form-group col-md-6 d-flex flex-column">
                                         <label>Resident</label>
@@ -40,6 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <?php endif ?>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label>Date Reserved</label>
@@ -299,7 +304,7 @@
                 const selected_resident = residents.find(x => x.id == currentTarget.value);
 
                 // Ipakita ang contact detail niya usbon ang contact number sa gipili nga resident
-                $('.contact-detail').slideDown().find('p span').text(selected_resident.contact_num ? selected_resident.contact_num : 'None');
+                selected_resident && $('.contact-detail').slideDown().find('p span').text(selected_resident.contact_num ? selected_resident.contact_num : 'None');
             });
 
             // Magbantay ug pisliton ang send code
@@ -503,7 +508,7 @@
             // Event Listener for add resource
             $('.btn-new').click(() => {
 
-                const resident = $('#resident option:selected').not(':disabled').val();
+                const resident = $('#resident').val();
                 const is_resident_verified = sessionStorage.getItem('<?php echo $current_reservation_id; ?>');
                 const date_reserved = $('[name="date_reserved"]').val();
 
@@ -513,10 +518,12 @@
                         throw 'Please Select Resident';
                     }
 
+                    <?php if ($this->session->userdata('role') != RESIDENT): ?>
                     // Tan awn ug verified
                     if (!is_resident_verified) {
                         throw 'Verify Resident Mobile Number';
                     }
+                    <?php endif ?>
 
                     // Tan awn ug naa date gipili
                     if (!date_reserved) {

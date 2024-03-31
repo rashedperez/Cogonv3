@@ -64,8 +64,12 @@
                                                 <td class="text-center"><?php echo $reservation->reserver; ?></td>
                                                 <td class="text-center"><?php echo date('F j, Y - g:i A', strtotime($reservation->date_reserved)); ?></td>
                                                 <td class="text-center">
-                                                    <div class="d-flex">
-                                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#reservation-payment" data-data='<?= json_encode($reservation) ?>'>Confirm Reservation</button>
+                                                    <div class="d-flex justify-content-center">
+                                                        <?php if ($this->session->userdata('role') == RESIDENT): ?>
+                                                        <button class="btn btn-outline-secondary btn-sm mr-1 rounded" data-toggle="modal" data-target="#reservationinfo" data-data='<?= json_encode($reservation) ?>'>Info</button>
+                                                        <a href="<?php echo base_url('reservation/edit/' . $reservation->id); ?>" class="btn btn-outline-info btn-sm rounded">Update</a>
+                                                        <?php else: ?>
+                                                        <button class="btn btn-outline-warning btn-sm rounded" data-toggle="modal" data-target="#reservation-payment" data-data='<?= json_encode($reservation) ?>'>Confirm Reservation</button>
                                                         <!-- Dropleft (Muabli sa wala ig click sa naay data-toggle="dropdown") -->
                                                         <div class="dropleft">
                                                             <!-- Three Dots Button-->
@@ -83,6 +87,7 @@
                                                                 </a>
                                                             </ul>
                                                         </div>
+                                                        <?php endif ?>
                                                     </div>
                                                 </td>
                                             </tr>

@@ -47,6 +47,7 @@ class User extends CI_Controller {
 
                     $this->session->set_userdata(array(
                         'logged_in' => TRUE,
+                        'user_id' => $user->id,
                         'id' => format_id_number($user->id),
                         'role' => $user->role,
                         'name' => $user->full_name
@@ -59,7 +60,13 @@ class User extends CI_Controller {
                         redirect('user/reset_password');
                     }
 
-                    redirect('dashboard');
+                    // Based redirect
+                    if ($user->role == RESIDENT) {
+                        redirect('resource/rented');
+                    }
+                    else {
+                        redirect('dashboard');
+                    }
                 }
                 else {
                     throw new Exception('Invalid login attempt');
@@ -199,6 +206,10 @@ class User extends CI_Controller {
             // Update attemmpt
             if ($this->user_model->update_user($POST['id'], ['password' => password_hash($POST['password'], PASSWORD_BCRYPT, ['cost' => 12]), 'password_change_required' => FALSE])) {
 
+
+                // Get user
+                $user = $this->user_model->get_user_by_id($POST['id']);
+
                 // Unset Reset ID
                 $this->session->unset_userdata('reset_password_user_id');
 
@@ -207,7 +218,7 @@ class User extends CI_Controller {
 
                 $response = array(
                     'status' => TRUE,
-                    'redirect' => base_url('dashboard')
+                    'redirect' => base_url($user->role == 'resident' ? 'resource/rented' : 'dashboard')
                 );
             }
             else {
@@ -227,6 +238,9 @@ class User extends CI_Controller {
         if (!$this->user_model->is_logged_in()) {
             redirect();
         }
+
+        // Only allow non-resident
+        $this->session->userdata('role') == RESIDENT && redirect('resource/rented');
 
         $data['users'] = $this->user_model->get_users();
 

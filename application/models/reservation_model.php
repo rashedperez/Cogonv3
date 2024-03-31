@@ -56,6 +56,12 @@
         // get unpaid reservations
         public function get_unpaid_reservations()
         {
+            // Applies to resident
+            if ($this->session->userdata('role') == RESIDENT) {
+                $resident = $this->resident_model->get_resident_by_user_id($this->session->userdata('user_id'));
+                $this->db->where('Res_id', $resident->id);
+            }
+            
             $this->db->where('date_paid', NULL);
             $this->db->order_by('id', 'desc');
             $query = $this->db->get('reservation');
@@ -66,6 +72,12 @@
         // get paid reservations
         public function get_paid_reservations()
         {
+            // Applies to resident
+            if ($this->session->userdata('role') == RESIDENT) {
+                $resident = $this->resident_model->get_resident_by_user_id($this->session->userdata('user_id'));
+                $this->db->where('Res_id', $resident->id);
+            }
+
             $this->db->where('date_paid !=', NULL);
             $this->db->order_by('id', 'desc');
             $query = $this->db->get('reservation');
