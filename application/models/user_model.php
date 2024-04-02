@@ -84,4 +84,21 @@ class User_model extends CI_Model {
 
         return $result;
     }
+
+    // Generate Username by Name
+    public function generate_username_from_name($name) {
+
+        // Username
+        $username = strtolower(str_replace(' ', '.', $name));
+
+        // Not unique
+        if ($this->get_user_by_name($username)) {
+
+            do {
+                $username = increment_string($username, '');
+            } while($this->get_user_by_name($username));
+        }
+
+        return $username;
+    }
 }

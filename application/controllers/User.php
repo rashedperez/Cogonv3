@@ -85,6 +85,12 @@ class User extends CI_Controller {
         }
     }
 
+    // Register
+    public function register() {
+
+        $this->load->view('user/register_view');
+    }
+
     // Logout
     public function logout() {
 

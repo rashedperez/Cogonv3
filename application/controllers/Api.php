@@ -41,6 +41,7 @@ class Api extends CI_Controller {
             // Generate OTP
             $response = array(
                 'status' => TRUE,
+                'guide' => 'One-Time Password has been sent to ' . substr($mobile_number, 0, 4) . str_repeat('*', strlen($mobile_number) - 8) . substr($mobile_number, -4),
                 'otp' => $code
             );
         }

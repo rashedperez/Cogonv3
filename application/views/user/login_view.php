@@ -21,7 +21,7 @@
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="sticky">
 	<div class="main d-flex justify-content-center w-100">
 		<main class="content d-flex p-0">
-			<div class="container d-flex flex-column">
+			<div class="container d-flex flex-column position-relative">
 				<div class="row h-100">
 					<div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
 						<div class="d-table-cell align-middle">
@@ -60,6 +60,9 @@
 						</div>
 					</div>
 				</div>
+				<div style="position: absolute; top: 5%; right: 5%">
+					<a href="<?php echo base_url('user/register'); ?>" style="color: black"><h6 class="mb-0"><u>Register as a resident</u></h6></a>
+				</div>
 			</div>
 		</main>
 	</div>
@@ -74,7 +77,7 @@
 			// Prompt Notification
             window.notyf.open({
                 type: '<?php echo $notification['type']; ?>',
-                message: '<?php echo $notification['message']; ?>',
+                message: `<?php echo $notification['message']; ?>`,
                 duration: 3000,
                 position: {
                     x: 'right',

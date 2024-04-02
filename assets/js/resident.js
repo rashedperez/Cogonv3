@@ -58,7 +58,7 @@ $('form').on('submit', (e) => {
     method: 'POST',
     dataType: 'json',
     data: $(e.target).serialize(),
-    success: async ({ status, message, password, redirect }) => {
+    success: async ({ status, message, username, password, redirect }) => {
       
       // Show message if there is
       if (message) {
@@ -84,8 +84,10 @@ $('form').on('submit', (e) => {
         }).fire({
           icon: 'success',
           title: `
-            Username: ${ username }<br/>
-            Password: ${ password }
+            <b>Username</b><br/>
+            ${ username }<br/>
+            <b>Password</b><br/>
+            ${ password }
           `
         });
       }

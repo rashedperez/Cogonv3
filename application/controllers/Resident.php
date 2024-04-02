@@ -2,14 +2,14 @@
     class Resident extends CI_Controller{
         public function __construct() {
             parent::__construct();
+        }
+        
+        public function resident_index() {
 
             // Check ug naka login
             if (!$this->user_model->is_logged_in()) {
                 redirect();
             }
-        }
-        
-        public function resident_index() {
 
             // Only allow non-resident
             $this->session->userdata('role') == RESIDENT && redirect('resource/rented');
@@ -33,7 +33,7 @@
             if ($this->form_validation->run()) {
 
                 // Username
-                $username = strtolower(str_replace(' ', '.', $this->input->post('name')));
+                $username = $this->user_model->generate_username_from_name($this->input->post('name'));
                 $password = random_string();
                 $user = $this->user_model->add_user(array(
                     'role' => 'resident',
