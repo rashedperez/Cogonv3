@@ -122,4 +122,38 @@ class Api extends CI_Controller {
 
         echo json_encode($response);
     }
+
+    // Icheck ug naa ba ang voter
+    public function voter_check() {
+
+        // ID
+        $id = $this->input->post('id');
+
+        try {
+            
+            // Voter
+            $voter = $this->resident_model->get_voter_by_id($id);
+
+            // Check if registered sa barangay
+            if (!$voter) {
+                throw new Exception('Voter\'s ID not found.');
+            }
+
+            // Already registered to the system
+            if ($voter->resident) {
+                throw new Exception('Voter\'s ID already has an account registered.');
+            }
+
+            // Response
+            $response = array(
+                'status' => TRUE,
+                'message' => 'Voter\'s ID Verified'
+            );
+        }
+        catch (Exception $e) {
+            $response['message'] = $e->getMessage();
+        }
+
+        echo json_encode($response);
+    }
 }

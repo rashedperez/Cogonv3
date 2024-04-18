@@ -28,6 +28,7 @@
             $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('contact_num', 'Contact Number', 'trim|required|min_length[11]|max_length[15]');
+            $this->form_validation->set_rules('voters_id', 'Voter ID', 'trim|max_length[100]');
 
             // Run validation
             if ($this->form_validation->run()) {
@@ -48,6 +49,7 @@
                     'name' => $this->input->post('name'),
                     'address' => $this->input->post('address'),
                     'contact_num' => $this->input->post('contact_num'),
+                    'voters_id' => $this->input->post('voters_id'),
                     'user_id' => $user
                 );
     

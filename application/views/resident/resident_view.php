@@ -27,6 +27,7 @@
 												<th>Resident</th>
 												<th>Address</th>
 												<th>Contact Number</th>
+												<th>Voter's ID</th>
 												<th class="text-center" style="width: 150px !important;">Action</th>
 											</tr>
 										</thead>
@@ -37,6 +38,7 @@
 												<td><?php echo $resident->name?></td>
 												<td><?php echo $resident->address?></td>
 												<td><?php echo $resident->contact_num?></td>
+												<td><?php echo $resident->voters_id ?? 'None'?></td>
 												<td class="text-center">
 													<button class ="btn border-0 text-primary" data-toggle="modal" data-target="#updateresidentmodal"
 													data-data='<?= json_encode($resident)?>'>

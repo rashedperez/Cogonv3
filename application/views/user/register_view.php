@@ -72,6 +72,27 @@
 		</main>
 	</div>
 
+    <div class="modal fade" id="voter-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center w-100">
+                        <h4 class="modal-title">Voter's ID</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center mb-0">Before registering, we require you to enter your Voter's ID to idenfity if you are a resident.</p>
+                    <div class="form-group my-5">
+                        <input type="text" class="text-center form-control form-control-lg" id="voters-id" placeholder="Enter your ID here..."/>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="button" class="btn btn-success" id="voters-check">Check</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="verify-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -121,6 +142,97 @@
 		<?php endif ?>
 
         $(document).ready(() => {
+
+            // Show modal
+            $('#voter-modal').modal('show');
+
+            // Minaw icheck ang voter's
+            $('#voters-check').on('click', ({ currentTarget }) => {
+
+                // Voters
+                const voters_id = $('#voters-id').val();
+
+                // Check ug nay gienter
+                if (!voters_id) {
+                    return window.notyf.open({
+                        type: 'error',
+                        message: 'Please enter you\'re Voter\'s ID',
+                        duration: 3000,
+                        position: {
+                            x: 'center',
+                            y: 'top'
+                        }
+                    });
+                }
+
+                // Ipatuyok2
+                const button = $(currentTarget).prop('disabled', true).html(`
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Verifying...
+                `);
+
+                // Verify
+                $.ajax({
+                    url: '../api/voter_check',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {  make_request: true, id: voters_id }
+                })
+                .done(({ status, message }) => {
+
+                    // Tanawn ug ok ba ang status
+                    if (status && status == true) {
+
+                        // Include to form
+                        $('form').prepend(`<input type="hidden" name="voters_id" value="${ voters_id }"/>`);
+
+                        // Inotify unsa ang OTP
+                        window.notyf.open({
+                            type: 'success',
+                            message: message,
+                            duration: 3000,
+                            position: {
+                                x: 'center',
+                                y: 'top'
+                            }
+                        });
+
+                        $('.modal').modal('hide');
+                    }
+                    else {
+
+                        // Balik button
+                        button.prop('disabled', false).text('Check');
+
+                        // Error message
+                        window.notyf.open({
+                            type: 'error',
+                            message: message,
+                            duration: 3000,
+                            position: {
+                                x: 'center',
+                                y: 'top'
+                            }
+                        });
+                    }
+                })
+                .fail((error) => {
+
+                    // Balik sa original
+                    button.prop('disabled', false).text('Check');
+
+                    // Error message
+                    window.notyf.open({
+                        type: 'error',
+                        message: 'Failed to verify OTP.<br/>Please try again later.',
+                        duration: 3000,
+                        position: {
+                            x: 'center',
+                            y: 'top'
+                        }
+                    });
+                });
+            });
 
             // Verified
             let verified = false;
@@ -262,6 +374,7 @@
                 data.append('name', [$(e.target).find('[name="fname"]').val(), $(e.target).find('[name="lname"]').val()].join(' '));
                 data.append('address', $(e.target).find('[name="address"]').val());
                 data.append('contact_num', $(e.target).find('[name="phone"]').val());
+                data.append('voters_id', $(e.target).find('[name="voters_id"]').val());
 
                 // Get form data
                 $.ajax({

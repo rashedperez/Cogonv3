@@ -51,5 +51,18 @@
             // Return
             return $query->row();
         }
+
+        // Get Voter by ID
+        public function get_voter_by_id($voters_id) {
+
+            // Build
+            $this->db->select('rv.*, r.id as resident');
+            $this->db->join('resident r', 'r.voters_id = rv.voters_id', 'left');
+            $this->db->where('rv.voters_id', $voters_id);
+            $query = $this->db->get('registered_voters rv', 1);
+
+            // Return
+            return $query->row();
+        }
     }
 ?>
